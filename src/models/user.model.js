@@ -1,18 +1,23 @@
 import Sequelize from "sequelize";
 import { db } from "../configs/database";
 
-const User = db.define(
-  "User",
-  {
+export default (sequelize, DataTypes) => {
+  const User = db.define("User", {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: {
         args: false,
         msg: "Please enter your name",
       },
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: {
         args: false,
         msg: "Please enter your email address",
@@ -29,36 +34,41 @@ const User = db.define(
       },
     },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: {
         args: false,
         msg: "Please enter a password",
       },
     },
-    resetToken: {
-      type: Sequelize.STRING,
-    },
-    exprireToken: {
-      type: Sequelize.DATE,
-    },
     bio: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       default: "",
     },
     role: {
-      type: Sequelize.STRING,
-      default: "Teacher",
+      type: DataTypes.STRING,
+      default: "Lecturer",
     },
     classId: {
       type: Sequelize.STRING,
       references: {
-        model: "Class",
+        model: "Classroom",
         key: "id",
         as: "classId",
       },
     },
-  },
-  {}
-);
-
-module.exports = User;
+    // resetToken: {
+    //   type: Sequelize.STRING,
+    // },
+    // exprireToken: {
+    //   type: Sequelize.DATE,
+    // },
+  });
+  User.associate = (models) => {
+    //1 - 1
+    // associations can be defined here
+    User.hasMany(models.User, {
+      foreignKey: "classId",
+    });
+  };
+  return Classroom;
+};

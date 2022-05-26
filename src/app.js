@@ -18,11 +18,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-require("./models/user.model");
+// require("./models/user.model");
+// require("./models/class.model");
+// require("./models/course.model");
 
-app.get("/", (req, res) => {
-  res.send("Test Server");
-});
+// app.get("/", (req, res) => {
+//   res.send("Test Server");
+// });
 
 app.use("/", authRoutes);
 

@@ -1,5 +1,5 @@
 import { db } from "../configs/database";
-import User from "../models/user.model";
+import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
 

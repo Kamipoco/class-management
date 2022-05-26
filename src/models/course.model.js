@@ -19,12 +19,12 @@ const Course = db.define(
         as: "idOwner",
       },
     },
-    idClass: {
+    classId: {
       type: Sequelize.INTEGER,
       references: {
         model: "Class",
         key: "id",
-        as: "idClass",
+        as: "classId",
       },
     },
     description: {
