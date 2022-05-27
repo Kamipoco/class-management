@@ -1,27 +1,19 @@
 import { config } from "dotenv";
+import { Sequelize } from "sequelize";
 
 config();
 
-module.exports = {
-  development: {
-    username: process.env.DB_USER || "root",
-    password: process.env.DB_PASS || null,
-    database: process.env.DB_NAME || "database_development",
-    host: process.env.DB_HOST || "127.0.0.1",
+export const db = new Sequelize(
+  process.env.DB_NAME || "classroom-management",
+  process.env.DB_USER || "postgres",
+  process.env.DB_PASS || "Vanlam@020499",
+  {
     dialect: "postgres",
-  },
-  test: {
-    username: process.env.DB_USER || "root",
-    password: process.env.DB_PASS || null,
-    database: process.env.DB_NAME || "database_test",
-    host: process.env.DB_HOST || "127.0.0.1",
-    dialect: "postgres",
-  },
-  production: {
-    username: process.env.DB_USER || "root",
-    password: process.env.DB_PASS || null,
-    database: process.env.DB_NAME || "database_production",
-    host: process.env.DB_HOST || "127.0.0.1",
-    dialect: "postgres",
-  },
-};
+    host: process.env.DB_HOST || "localhost",
+    port: 5432,
+  }
+);
+
+db.authenticate()
+  .then(() => console.log("Connected to database"))
+  .catch((err) => console.log(err));

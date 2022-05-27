@@ -20,4 +20,4 @@
       "host": "localhost",
       "dialect": "postgres"
     }
-  }
+}

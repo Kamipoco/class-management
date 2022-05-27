@@ -1,14 +1,12 @@
-import { db } from "../configs/database";
-import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
+import Student from "../models/student.model";
 
 const signUp = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { student_name, email, password } = req.body;
 
-    //check mail
-    const check = await User.findOne({
+    const check = await Student.findOne({
       where: {
         email: email,
       },
@@ -26,15 +24,15 @@ const signUp = async (req, res, next) => {
         console.log(error);
       }
 
-      const user = await User.create({
-        name,
+      const student = await Student.create({
+        student_name,
         email,
         password: passwordhashed,
       });
 
-      await user.save();
+      await student.save();
 
-      return res.status(200).json({ msg: "Success", data: { user } });
+      return res.status(200).json({ msg: "Success", data: { student } });
     });
   } catch (error) {
     console.log(error);
@@ -45,7 +43,7 @@ const signUp = async (req, res, next) => {
 //   try {
 //     const { email, password } = req.body;
 
-//     const check = await User.findOne({
+//     const check = await Student.findOne({
 //       where: {
 //         email: email.toLowerCase().toString(),
 //       },
@@ -82,8 +80,4 @@ const signUp = async (req, res, next) => {
 //   }
 // };
 
-module.exports = {
-  signUp,
-  //   SignIn,
-  //   logOut,
-};
+module.exports = { signUp };

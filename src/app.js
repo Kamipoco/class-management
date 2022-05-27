@@ -4,8 +4,9 @@ import helmet from "helmet";
 import cors from "cors";
 import hpp from "hpp";
 import morgan from "morgan";
-// import { db } from "./configs/database";
-// import authRoutes from "./routes/auth";
+import { db } from "./config/config";
+import authRoutes from "./routes/auth";
+import StudentRoutes from "./routes/student";
 
 const app = express();
 config();
@@ -18,18 +19,11 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// require("./models/user.model");
-// require("./models/class.model");
-// require("./models/course.model");
-
-app.get("/", (req, res) => {
-  res.send("Test Server");
-});
-
-// app.use("/", authRoutes);
+app.use("/", authRoutes);
+app.use("/", StudentRoutes);
 
 app.listen(process.env.APP_PORT, async () => {
-  // await db.sync();
+  await db.sync();
   console.log(
     `Hi, I am running at http://${process.env.APP_HOST}:${process.env.APP_PORT}/`
   );

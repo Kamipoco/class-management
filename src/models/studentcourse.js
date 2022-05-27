@@ -37,3 +37,5 @@ module.exports = (sequelize, DataTypes) => {
   );
   return StudentCourse;
 };
+
+export default StudentCourse;
