@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       bio: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
