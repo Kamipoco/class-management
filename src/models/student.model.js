@@ -44,7 +44,7 @@ const Student = db.define("Student", {
 
 Student.belongsTo(Classroom, {
   foreignKey: "classroom_id",
-  as: "Classroom",
+  as: "Student",
 });
 
 Student.belongsToMany(Course, {

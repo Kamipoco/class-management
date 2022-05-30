@@ -1,10 +1,6 @@
+import { db } from "../config/config";
 import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
-
-Classroom.hasMany(Student, {
-  foreignKey: "classroom_id",
-  as: "Student",
-});
 
 const list = async (req, res, next) => {};
 

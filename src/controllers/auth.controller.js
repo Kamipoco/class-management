@@ -72,6 +72,12 @@ const signIn = async (req, res, next) => {
   }
 };
 
+//reset password
+const forgotPassword = async (req, res, next) => {};
+
+//create new password
+const newPassword = async (req, res, next) => {};
+
 module.exports = {
   signUp,
   signIn,

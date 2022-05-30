@@ -24,6 +24,14 @@ module.exports = {
         type: Sequelize.STRING,
         default: "student",
       },
+      classroom_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Classroom",
+          key: "id",
+          as: "classroom_id",
+        },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

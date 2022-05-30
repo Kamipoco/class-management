@@ -37,12 +37,12 @@ const getStudentById = async (req, res, next) => {
   }
 };
 
-const add = async (req, res, next) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const add = async (req, res, next) => {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 module.exports = {
   getStudents,

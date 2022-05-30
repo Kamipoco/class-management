@@ -34,13 +34,13 @@ const Course = db.define("Course", {
   },
 });
 
-Course.bolongsToMany(Student, {
+Course.belongsToMany(Student, {
   through: "StudentCourse",
   as: "Student",
   foreignKey: "course_id",
 });
 
-Student.bolongsToMany(Lecturer, {
+Student.belongsToMany(Lecturer, {
   foreignKey: "lecturer_id",
   as: "Lecturer",
 });
