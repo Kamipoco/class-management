@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
 import Student from "../models/student.model";
-import nodemailer from "nodemailer";
 
 const signUp = async (req, res, next) => {
   try {
@@ -74,66 +73,66 @@ const signIn = async (req, res, next) => {
 };
 
 //reset password
-const forgotPassword = async (req, res, next) => {
-  const buffer = crypto.randomBytes(32);
-  const token = buffer.toString("hex");
+// const forgotPassword = async (req, res, next) => {
+//   const buffer = crypto.randomBytes(32);
+//   const token = buffer.toString("hex");
 
-  const student = await Student.findOne({
-    where: { email: req.body.email },
-  });
+//   const student = await Student.findOne({
+//     where: { email: req.body.email },
+//   });
 
-  if (!student) {
-    return res.status(422).json({
-      error: "User dont exists with that email",
-    });
-  }
+//   if (!student) {
+//     return res.status(422).json({
+//       error: "User dont exists with that email",
+//     });
+//   }
 
-  student.resetToken = token;
-  student.expireToken = Date.now() + 3600000;
+//   student.resetToken = token;
+//   student.expireToken = Date.now() + 3600000;
 
-  await student.save();
+//   await student.save();
 
-  //send mail
+//send mail
 
-  // crypto.randomBytes(32, (err, buffer) => {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  // });
-  // Student.findOne({ where: { email: req.body.email } }).then((user) => {
-  //   if (!user) {
-  //     return res
-  //       .status(422)
-  //       .json({ error: "User dont exists with that email" });
-  //   }
-  //   user.resetToken = token;
-  //   user.expireToken = Date.now() + 3600000;
-  //   user.save().then((result) => {
-  //     sgMail.send({
-  //       to: result.email,
-  //       from: {
-  //         name: "no-reply@insta.com",
-  //         email: "1751120025@sv.ut.edu.vn",
-  //       },
-  //       subject: "Reset password",
-  //       text: "From sendgrid",
-  //       html: `
-  //                     <h3>You requested for password reset</h3>
-  //                     <h3>Click in this <a href="http://localhost:4200/auth/new-password/${token}">Link</a>to reset password</h3>
-  //                     `,
-  //     });
+// crypto.randomBytes(32, (err, buffer) => {
+//   if (err) {
+//     console.log(err);
+//   }
+// });
+// Student.findOne({ where: { email: req.body.email } }).then((user) => {
+//   if (!user) {
+//     return res
+//       .status(422)
+//       .json({ error: "User dont exists with that email" });
+//   }
+//   user.resetToken = token;
+//   user.expireToken = Date.now() + 3600000;
+//   user.save().then((result) => {
+//     sgMail.send({
+//       to: result.email,
+//       from: {
+//         name: "no-reply@insta.com",
+//         email: "1751120025@sv.ut.edu.vn",
+//       },
+//       subject: "Reset password",
+//       text: "From sendgrid",
+//       html: `
+//                     <h3>You requested for password reset</h3>
+//                     <h3>Click in this <a href="http://localhost:4200/auth/new-password/${token}">Link</a>to reset password</h3>
+//                     `,
+//     });
 
-  //     return res.json({ status: 200, message: "Check your email" });
-  //   });
-  // });
-};
+//     return res.json({ status: 200, message: "Check your email" });
+//   });
+// });
+// };
 
 //create new password
-const newPassword = async (req, res, next) => {};
+// const newPassword = async (req, res, next) => {};
 
 module.exports = {
   signUp,
   signIn,
-  forgotPassword,
-  newPassword,
+  // forgotPassword,
+  // newPassword,
 };
