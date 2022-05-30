@@ -25,7 +25,7 @@ const Course = db.define("Course", {
   },
   lecturer_id: {
     //nen lưu id vào bảng nối giữa lecturer-course để trường hợp năm nay lecturer đảm nhận course và năm sau lại đảm nhận course khác với id khác
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     references: {
       model: "Lecturer",
       key: "id",
@@ -34,15 +34,15 @@ const Course = db.define("Course", {
   },
 });
 
-Course.belongsToMany(Student, {
-  through: "StudentCourse",
-  as: "Student",
-  foreignKey: "course_id",
-});
+// Course.belongsToMany(Student, {
+//   through: "StudentCourse",
+//   as: "Student",
+//   foreignKey: "course_id",
+// });
 
-Student.belongsToMany(Lecturer, {
-  foreignKey: "lecturer_id",
-  as: "Lecturer",
-});
+// Student.belongsToMany(Lecturer, {
+//   foreignKey: "lecturer_id",
+//   as: "Lecturer",
+// });
 
 module.exports = Course;

@@ -31,6 +31,14 @@ const Student = db.define("Student", {
     type: Sequelize.STRING,
     defaultValue: "student",
   },
+  resetToken: {
+    type: Sequelize.STRING,
+    defaultValue: "",
+  },
+  expireToken: {
+    type: Sequelize.DATE,
+    allowNull: true,
+  },
   classroom_id: {
     //co the tao bang trung gian Class_Student
     type: Sequelize.INTEGER,
@@ -42,15 +50,15 @@ const Student = db.define("Student", {
   },
 });
 
-Student.belongsTo(Classroom, {
-  foreignKey: "classroom_id",
-  as: "Student",
-});
+// Student.belongsTo(Classroom, {
+//   foreignKey: "classroom_id",
+//   as: "Student",
+// });
 
-Student.belongsToMany(Course, {
-  through: "StudentCourse",
-  as: "Course",
-  foreignKey: "student_id",
-});
+// Student.belongsToMany(Course, {
+//   through: "StudentCourse",
+//   as: "Course",
+//   foreignKey: "student_id",
+// });
 
 module.exports = Student;

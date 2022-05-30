@@ -31,9 +31,9 @@ const Lecturer = db.define("Lecturer", {
   },
 });
 
-Lecturer.hasOne(Course, {
-  foreignKey: "lecturer_id",
-  as: "Course",
-});
+// Lecturer.hasOne(Course, {
+//   foreignKey: "lecturer_id",
+//   as: "Course",
+// });
 
 module.exports = Lecturer;
