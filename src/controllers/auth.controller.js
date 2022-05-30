@@ -39,45 +39,40 @@ const signUp = async (req, res, next) => {
   }
 };
 
-// const SignIn = async (req, res, next) => {
-//   try {
-//     const { email, password } = req.body;
+const signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-//     const check = await Student.findOne({
-//       where: {
-//         email: email.toLowerCase().toString(),
-//       },
-//     });
+    const check = await Student.findOne({
+      where: {
+        email: email.toLowerCase().toString(),
+      },
+    });
 
-//     if (!check) {
-//       return res.status(422).json({
-//         message: "Invalid Email or Password",
-//       });
-//     }
+    if (!check) {
+      return res.status(422).json({
+        message: "Invalid Email or Password",
+      });
+    }
 
-//     const comparePassword = bcrypt.compare(password, check.password);
+    const comparePassword = bcrypt.compare(password, check.password);
 
-//     if (!comparePassword) {
-//       return res.status(400).json({ message: "Invalid Pw" });
-//     }
+    if (!comparePassword) {
+      return res.status(400).json({ message: "Invalid Pw" });
+    }
 
-//     const token = signJWT(check);
+    const token = signJWT(check);
 
-//     return res.status(200).json({
-//       message: "Login Success",
-//       token,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+    return res.status(200).json({
+      message: "Login Success",
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// const logOut = async (req, res) => {
-//   try {
-//     //code
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-module.exports = { signUp };
+module.exports = {
+  signUp,
+  signIn,
+};

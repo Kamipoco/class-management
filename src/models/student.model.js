@@ -1,5 +1,8 @@
 import Sequelize from "sequelize";
 import { db } from "../config/config";
+import Classroom from "../models/classroom.model";
+import Course from "../models/course.model";
+import StudentCourse from "../models/studentcourse.model";
 
 const Student = db.define("Student", {
   id: {
@@ -24,6 +27,30 @@ const Student = db.define("Student", {
     type: Sequelize.STRING,
     defaultValue: "",
   },
+  role: {
+    type: Sequelize.STRING,
+    defaultValue: "student",
+  },
+  classroom_id: {
+    //co the tao bang trung gian Class_Student
+    type: Sequelize.INTEGER,
+    references: {
+      model: "Classroom",
+      key: "id",
+      as: "classroom_id",
+    },
+  },
+});
+
+Student.belongsTo(Classroom, {
+  foreignKey: "classroom_id",
+  as: "Classroom",
+});
+
+Student.belongsToMany(Course, {
+  through: "StudentCourse",
+  as: "Course",
+  foreignKey: "student_id",
 });
 
 module.exports = Student;

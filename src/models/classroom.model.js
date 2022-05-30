@@ -1,5 +1,6 @@
 import Sequelize from "sequelize";
 import { db } from "../config/config";
+import Student from "../models/student.model";
 
 const Classroom = db.define("Classroom", {
   id: {
@@ -14,12 +15,17 @@ const Classroom = db.define("Classroom", {
   },
   description: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
   },
   status: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
   },
+});
+
+Classroom.hasMany(Student, {
+  foreignKey: "classroom_id",
+  as: "Student",
 });
 
 module.exports = Classroom;

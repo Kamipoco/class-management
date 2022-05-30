@@ -20,6 +20,10 @@ module.exports = {
       bio: {
         type: Sequelize.STRING,
       },
+      role: {
+        type: Sequelize.STRING,
+        default: "lecturer",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

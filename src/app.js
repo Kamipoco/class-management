@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { db } from "./config/config";
 import authRoutes from "./routes/auth";
 import StudentRoutes from "./routes/student";
+import ClassRoutes from "./routes/classroom";
 
 const app = express();
 config();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", authRoutes);
 app.use("/", StudentRoutes);
+app.use("/", ClassRoutes);
 
 app.listen(process.env.APP_PORT, async () => {
   await db.sync();
