@@ -174,6 +174,6 @@ const newPassword = async (req, res, next) => {
 module.exports = {
   signUp,
   signIn,
-  forgotPassword,
-  newPassword,
+  // forgotPassword,
+  // newPassword,
 };

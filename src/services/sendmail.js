@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer";
-import { config } from "dotenv";
+// import nodemailer from "nodemailer";
+// import { config } from "dotenv";
 
-config();
+// config();
 
 const sendMail = (to, subject, htmlContent) => {
   const transporter = nodemailer.createTransport({
