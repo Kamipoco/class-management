@@ -1,6 +1,7 @@
 import { db } from "../config/config";
 import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
+// const Classroom = require("../models/v1/classroom").Classroom;
 
 const list = async (req, res, next) => {
   try {

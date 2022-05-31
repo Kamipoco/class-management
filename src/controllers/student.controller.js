@@ -1,7 +1,7 @@
 import { db } from "../config/config";
 import Student from "../models/student.model";
 import Classroom from "../models/classroom.model";
-import Course from "../models/v1/course";
+import Course from "../models/course.model";
 
 const getStudents = async (req, res, next) => {
   try {

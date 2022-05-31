@@ -1,16 +1,19 @@
 import { db } from "../config/config";
-import Student from "../models/student.model";
-import Classroom from "../models/classroom.model";
-import Course from "../models/course";
-import Lecturer from "../models/lecturer.model";
+import Course from "../models/course.model";
 
-// Course.bolongsToMany(Student, {
-//   through: "StudentCourse",
-//   as: "Student",
-//   foreignKey: "course_id",
-// });
+const listCourses = async (req, res, next) => {
+  try {
+    const lists = await Course.findAll({});
 
-// Student.bolongsToMany(Lecturer, {
-//   foreignKey: "lecturer_id",
-//   as: "lecturer",
-// });
+    return res.status(200).json({
+      msg: "success",
+      datas: lists,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  listCourses,
+};

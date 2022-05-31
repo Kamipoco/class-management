@@ -45,6 +45,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "",
       },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: "student",
+      },
+      resetToken: {
+        type: Sequelize.STRING,
+        defaultValue: "",
+      },
+      expireToken: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
       classroom_id: {
         //luu trong mot bang noi ClassStudent
         type: DataTypes.INTEGER,

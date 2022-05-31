@@ -5,9 +5,11 @@ import cors from "cors";
 import hpp from "hpp";
 import morgan from "morgan";
 import { db } from "./config/config";
-import authRoutes from "./routes/auth";
+import AuthRoutes from "./routes/auth";
 import StudentRoutes from "./routes/student";
 import ClassRoutes from "./routes/classroom";
+import CourseRoutes from "./routes/course";
+import LecturerRoutes from "./routes/lecturer";
 
 const app = express();
 config();
@@ -20,9 +22,11 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", authRoutes);
+app.use("/", AuthRoutes);
 app.use("/", StudentRoutes);
 app.use("/", ClassRoutes);
+app.use("/", CourseRoutes);
+app.use("/", LecturerRoutes);
 
 app.listen(process.env.APP_PORT, async () => {
   await db.sync();

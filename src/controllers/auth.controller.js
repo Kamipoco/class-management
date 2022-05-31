@@ -76,7 +76,6 @@ const signIn = async (req, res, next) => {
   }
 };
 
-//reset password
 const forgotPassword = async (req, res, next) => {
   try {
     const buffer = crypto.randomBytes(32);
@@ -130,7 +129,6 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-//create new password
 const newPassword = async (req, res, next) => {
   try {
     const { token, password } = req.body;
@@ -158,8 +156,8 @@ const newPassword = async (req, res, next) => {
 
     const hashedpassword = await bcrypt.hash(password, 12);
     check.password = hashedpassword;
-    check.resetToken = undefined;
-    check.expireToken = undefined;
+    check.resetToken = null;
+    check.expireToken = null;
 
     await check.save();
 
@@ -174,6 +172,6 @@ const newPassword = async (req, res, next) => {
 module.exports = {
   signUp,
   signIn,
-  // forgotPassword,
-  // newPassword,
+  forgotPassword,
+  newPassword,
 };
