@@ -2,6 +2,9 @@ import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
 import Student from "../models/student.model";
 import nodemailer from "nodemailer";
+import { sendMail } from "../services/sendmail";
+import crypto from "crypto";
+import { Op } from "sequelize";
 
 const signUp = async (req, res, next) => {
   try {
@@ -56,7 +59,7 @@ const signIn = async (req, res, next) => {
       });
     }
 
-    const comparePassword = bcrypt.compare(password, check.password);
+    const comparePassword = await bcrypt.compare(password, check.password);
 
     if (!comparePassword) {
       return res.status(400).json({ message: "Invalid Pw" });
@@ -75,61 +78,98 @@ const signIn = async (req, res, next) => {
 
 //reset password
 const forgotPassword = async (req, res, next) => {
-  const buffer = crypto.randomBytes(32);
-  const token = buffer.toString("hex");
+  try {
+    const buffer = crypto.randomBytes(32);
+    const token = buffer.toString("hex");
 
-  const student = await Student.findOne({
-    where: { email: req.body.email },
-  });
-
-  if (!student) {
-    return res.status(422).json({
-      error: "User dont exists with that email",
+    const student = await Student.findOne({
+      where: { email: req.body.email },
     });
+
+    if (!student) {
+      return res.status(422).json({
+        error: "User dont exists with that email",
+      });
+    }
+
+    student.resetToken = token;
+    student.expireToken = Date.now() + 3600000;
+
+    const result = await student.save();
+
+    //send mail
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_PASSWORD,
+      },
+    });
+
+    var mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: result.email,
+      subject: "Reset Password",
+      html: `
+        <h3>You requested for password reset</h3>
+        <h3>Click in this <a href="http://localhost:5000/new-password/${token}">Link</a>to reset password</h3>
+       `,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        return res.status(200).json({
+          msg: "Check your email",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
   }
-
-  student.resetToken = token;
-  student.expireToken = Date.now() + 3600000;
-
-  await student.save();
-
-  //send mail
-
-  // crypto.randomBytes(32, (err, buffer) => {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  // });
-  // Student.findOne({ where: { email: req.body.email } }).then((user) => {
-  //   if (!user) {
-  //     return res
-  //       .status(422)
-  //       .json({ error: "User dont exists with that email" });
-  //   }
-  //   user.resetToken = token;
-  //   user.expireToken = Date.now() + 3600000;
-  //   user.save().then((result) => {
-  //     sgMail.send({
-  //       to: result.email,
-  //       from: {
-  //         name: "no-reply@insta.com",
-  //         email: "1751120025@sv.ut.edu.vn",
-  //       },
-  //       subject: "Reset password",
-  //       text: "From sendgrid",
-  //       html: `
-  //                     <h3>You requested for password reset</h3>
-  //                     <h3>Click in this <a href="http://localhost:4200/auth/new-password/${token}">Link</a>to reset password</h3>
-  //                     `,
-  //     });
-
-  //     return res.json({ status: 200, message: "Check your email" });
-  //   });
-  // });
 };
 
 //create new password
-const newPassword = async (req, res, next) => {};
+const newPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token) {
+      return res.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+
+    const check = await Student.findOne({
+      where: {
+        resetToken: token,
+        expireToken: {
+          [Op.gt]: Date.now(),
+        },
+      },
+    });
+
+    if (!check) {
+      return res.status(422).json({
+        error: "Try again session expired",
+      });
+    }
+
+    const hashedpassword = await bcrypt.hash(password, 12);
+    check.password = hashedpassword;
+    check.resetToken = undefined;
+    check.expireToken = undefined;
+
+    await check.save();
+
+    return res.status(200).json({
+      msg: "Password updated success",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   signUp,

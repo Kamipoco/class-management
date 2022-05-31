@@ -1,46 +1,45 @@
-"use strict";
+import Sequelize from "sequelize";
+import { db } from "../config/config";
+import Student from "../models/student.model";
+import Lecturer from "../models/lecturer.model";
+import StudentCourse from "../models/studentcourse.model";
+import Course from "../models/course.model";
+import Classroom from "../models/classroom.model";
 
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
-const db = {};
-
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
-}
-
-fs.readdirSync(__dirname)
-  .filter((file) => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+Classroom.hasMany(Student, {
+  foreignKey: "classroom_id",
+  as: "Student",
+  sourceKey: "id",
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+Student.belongsTo(Classroom, {
+  foreignKey: "classroom_id",
+  as: "Student",
+});
 
-module.exports = db;
+Lecturer.hasOne(Course, {
+  foreignKey: "lecturer_id",
+  as: "Course",
+});
+
+Student.belongsToMany(Course, {
+  through: "StudentCourse",
+  as: "Course",
+  foreignKey: "student_id",
+});
+
+Course.belongsToMany(Student, {
+  through: "StudentCourse",
+  as: "Student",
+  foreignKey: "course_id",
+});
+
+Course.belongsTo(Lecturer, {
+  foreignKey: "lecturer_id",
+  as: "lecturer",
+});
+
+Student.belongsToMany(Lecturer, {
+  foreignKey: "lecturer_id",
+  as: "Lecturer",
+});

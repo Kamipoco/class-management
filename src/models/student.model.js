@@ -40,25 +40,13 @@ const Student = db.define("Student", {
     allowNull: true,
   },
   classroom_id: {
-    //co the tao bang trung gian Class_Student
     type: Sequelize.INTEGER,
-    references: {
-      model: "Classroom",
-      key: "id",
-      as: "classroom_id",
-    },
+    // references: {
+    //   model: "classroom",
+    //   key: "id",
+    //   as: "classroom_id",
+    // },
   },
 });
-
-// Student.belongsTo(Classroom, {
-//   foreignKey: "classroom_id",
-//   as: "Student",
-// });
-
-// Student.belongsToMany(Course, {
-//   through: "StudentCourse",
-//   as: "Course",
-//   foreignKey: "student_id",
-// });
 
 module.exports = Student;

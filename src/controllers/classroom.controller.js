@@ -2,7 +2,18 @@ import { db } from "../config/config";
 import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
 
-const list = async (req, res, next) => {};
+const list = async (req, res, next) => {
+  try {
+    const classes = await Classroom.findAll();
+
+    return res.status(200).json({
+      msg: "success",
+      datas: classes,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const add = async (req, res, next) => {
   try {
