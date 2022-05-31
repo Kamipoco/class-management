@@ -164,7 +164,7 @@ const newPassword = async (req, res, next) => {
     await check.save();
 
     return res.status(200).json({
-      msg: "Password updated success",
+      msg: "Password updated success ok",
     });
   } catch (error) {
     console.log(error);
