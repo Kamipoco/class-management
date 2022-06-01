@@ -17,21 +17,27 @@ const Course = db.define("Course", {
   },
   title: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
   },
   description: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
   },
   lecturer_id: {
     //nen lưu id vào bảng nối giữa lecturer-course để trường hợp năm nay lecturer đảm nhận course và năm sau lại đảm nhận course khác với id khác
     type: Sequelize.INTEGER,
-    // references: {
-    //   model: "Lecturer",
-    //   key: "id",
-    //   as: "lecturer_id",
-    // },
   },
 });
+
+// Course.belongsToMany(Student, {
+//   through: "StudentCourse",
+//   as: "student",
+//   foreignKey: "course_id",
+// });
+
+// Course.belongsTo(Lecturer, {
+//   foreignKey: "lecturer_id",
+//   as: "lecturer",
+// });
 
 module.exports = Course;

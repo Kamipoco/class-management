@@ -1,26 +1,53 @@
 import { db } from "../config/config";
 import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
-// const Classroom = require("../models/v1/classroom").Classroom;
+import ClassStudent from "../models/classstudent.model";
 
-const list = async (req, res, next) => {
+const listClass = async (req, res, next) => {
   try {
-    const classes = await Classroom.findAll();
+    // const classes = await Classroom.findAll();
+    // return res.status(200).json({
+    //   msg: "success",
+    //   datas: classes,
+    // });
+
+    const lists = await Classroom.findAll({
+      include: [
+        {
+          model: Student,
+          through: "ClassroomStudent",
+          as: "Student",
+        },
+      ],
+      order: [
+        ["createdAt", "DESC"],
+        [
+          {
+            model: Student,
+            as: "Student",
+          },
+          "createdAt",
+          "DESC",
+        ],
+      ],
+    });
 
     return res.status(200).json({
       msg: "success",
-      datas: classes,
+      datas: lists,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const add = async (req, res, next) => {
+const addClass = async (req, res, next) => {
   try {
     const addClass = req.body.class_name;
 
-    const result = await Classroom.create(addClass);
+    const result = await Classroom.create({
+      class_name: addClass,
+    });
 
     return res.status(200).json({
       msg: "success",
@@ -31,7 +58,42 @@ const add = async (req, res, next) => {
   }
 };
 
+const addWithStudent = async (req, res, next) => {
+  try {
+    const result = await Classroom.create(
+      {
+        class_name: req.body.class_name,
+        student_id: req.body.student_id,
+      },
+      {
+        include: [
+          {
+            model: Student,
+            as: "Student",
+          },
+        ],
+      }
+    );
+
+    await result.save();
+
+    return res.status(200).json({
+      msg: "success",
+      datas: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateClass = async (req, res, next) => {};
+
+const deleteClass = async (req, res, next) => {};
+
 module.exports = {
-  list,
-  add,
+  listClass,
+  addClass,
+  addWithStudent,
+  updateClass,
+  deleteClass,
 };

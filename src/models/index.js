@@ -6,40 +6,55 @@ import StudentCourse from "../models/studentcourse.model";
 import Course from "../models/course.model";
 import Classroom from "../models/classroom.model";
 
-Classroom.hasMany(Student, {
-  foreignKey: "classroom_id",
-  as: "Student",
-  sourceKey: "id",
-});
-
-Student.belongsTo(Classroom, {
+//#region Classroom
+Classroom.belongsToMany(Student, {
+  through: "ClassroomStudent",
   foreignKey: "classroom_id",
   as: "Student",
 });
+// Classroom.hasMany(Student, {
+//   through: "ClassroomStudent",
+//   foreignKey: "classroom_id",
+//   as: "Student",
+// });
+//#endregion
 
-Lecturer.hasOne(Course, {
-  foreignKey: "lecturer_id",
-  as: "Course",
+//#region Lecturer
+// Lecturer.hasOne(Course, {
+//   foreignKey: "lecturer_id",
+//   as: "Course",
+// });
+//#endregion
+
+//#region Course
+// Course.belongsToMany(Student, {
+//   through: "StudentCourse",
+//   as: "Student",
+//   foreignKey: "course_id",
+// });
+
+// Course.belongsTo(Lecturer, {
+//   foreignKey: "lecturer_id",
+//   as: "Lecturer",
+// });
+//#endregion
+
+//#region Student
+Student.belongsToMany(Classroom, {
+  through: "ClassroomStudent",
+  foreignKey: "classroom_id",
+  as: "Classroom",
 });
 
-Student.belongsToMany(Course, {
-  through: "StudentCourse",
-  as: "Course",
-  foreignKey: "student_id",
-});
+// Student.belongsToMany(Course, {
+//   through: "StudentCourse",
+//   foreignKey: "student_id",
+//   as: "Course",
+// });
 
-Course.belongsToMany(Student, {
-  through: "StudentCourse",
-  as: "Student",
-  foreignKey: "course_id",
-});
+//#endregion
 
-Course.belongsTo(Lecturer, {
-  foreignKey: "lecturer_id",
-  as: "lecturer",
-});
-
-Student.belongsToMany(Lecturer, {
-  foreignKey: "lecturer_id",
-  as: "Lecturer",
-});
+// Student.belongsToMany(Lecturer, {
+//   foreignKey: "lecturer_id",
+//   as: "Lecturer",
+// });

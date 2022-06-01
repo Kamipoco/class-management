@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
 import { db } from "../config/config";
 
-const StudentCourse = db.define("StudentCourse", {
-  student_id: {
+const ClassStudent = db.define("ClassStudent", {
+  classroom_id: {
     type: Sequelize.INTEGER,
   },
-  course_id: {
+  student_id: {
     type: Sequelize.INTEGER,
   },
 });
 
-module.exports = StudentCourse;
+module.exports = ClassStudent;

@@ -5,28 +5,22 @@ import Student from "../models/student.model";
 config();
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
+  const { accessToken } = req.headers;
+
   //authorization === Bearer effqweasdjkwqiulaksqdasd
-  if (!authorization) {
-    res.status(401).json({ error: "You must be logged in" });
+  if (!accessToken) {
+    return res.status(401).json({ error: "You must be logged in" });
   }
-  const token = authorization.replace("Bearer", "");
-  jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
+  // const token = authorization.replace("Bearer", "");
+  jwt.verify(accessToken, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: "You must be logged in" });
     }
 
-    console.log(">>>>>>>>>>>>>>>>>>");
-    console.log(payload);
-    console.log("<<<<<<<<<<<<<<<<<<");
-
-    const { _id } = payload;
-    Student.findByPk(_id).then((userData) => {
+    const { id } = decoded.payload;
+    Student.findByPk(id).then((userData) => {
       req.user = userData;
       next();
     });
-
-    // req.user = payload.id;
-    // next();
   });
 };

@@ -19,8 +19,14 @@ const Classroom = db.define("Classroom", {
   },
   status: {
     type: Sequelize.BOOLEAN,
-    allowNull: false,
+    defaultValue: false,
   },
 });
+
+// Classroom.hasMany(Student, {
+//   foreignKey: "classroom_id",
+//   as: "student",
+//   sourceKey: "id",
+// });
 
 module.exports = Classroom;
