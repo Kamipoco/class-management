@@ -28,8 +28,14 @@ const forgotSchema = Joi.object({
     .required(),
 });
 
+const newPasswordSchema = Joi.object({
+  token: Joi.string().min(5).max(50).required(),
+  password: Joi.string().min(5).max(50).required(),
+});
+
 module.exports = {
   SignUpSchema,
   SignInSchema,
   forgotSchema,
+  newPasswordSchema,
 };

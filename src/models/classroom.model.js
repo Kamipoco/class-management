@@ -23,10 +23,4 @@ const Classroom = db.define("Classroom", {
   },
 });
 
-// Classroom.hasMany(Student, {
-//   foreignKey: "classroom_id",
-//   as: "student",
-//   sourceKey: "id",
-// });
-
 module.exports = Classroom;

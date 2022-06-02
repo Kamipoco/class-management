@@ -22,6 +22,9 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.get("/", async (req, res) => {
+  res.send("Home");
+});
 app.use("/", AuthRoutes);
 app.use("/", StudentRoutes);
 app.use("/", ClassRoutes);

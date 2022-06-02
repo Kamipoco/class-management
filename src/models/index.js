@@ -20,23 +20,23 @@ Classroom.belongsToMany(Student, {
 //#endregion
 
 //#region Lecturer
-// Lecturer.hasOne(Course, {
-//   foreignKey: "lecturer_id",
-//   as: "Course",
-// });
+Lecturer.hasOne(Course, {
+  foreignKey: "lecturer_id",
+  as: "Course",
+});
 //#endregion
 
 //#region Course
-// Course.belongsToMany(Student, {
-//   through: "StudentCourse",
-//   as: "Student",
-//   foreignKey: "course_id",
-// });
+Course.belongsToMany(Student, {
+  through: "StudentCourse",
+  as: "Student",
+  foreignKey: "course_id",
+});
 
-// Course.belongsTo(Lecturer, {
-//   foreignKey: "lecturer_id",
-//   as: "Lecturer",
-// });
+Course.belongsTo(Lecturer, {
+  foreignKey: "lecturer_id",
+  as: "Lecturer",
+});
 //#endregion
 
 //#region Student
@@ -46,11 +46,11 @@ Student.belongsToMany(Classroom, {
   as: "Classroom",
 });
 
-// Student.belongsToMany(Course, {
-//   through: "StudentCourse",
-//   foreignKey: "student_id",
-//   as: "Course",
-// });
+Student.belongsToMany(Course, {
+  through: "StudentCourse",
+  foreignKey: "student_id",
+  as: "Course",
+});
 
 //#endregion
 

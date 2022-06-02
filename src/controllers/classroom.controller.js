@@ -5,12 +5,6 @@ import ClassStudent from "../models/classstudent.model";
 
 const listClass = async (req, res, next) => {
   try {
-    // const classes = await Classroom.findAll();
-    // return res.status(200).json({
-    //   msg: "success",
-    //   datas: classes,
-    // });
-
     const lists = await Classroom.findAll({
       include: [
         {

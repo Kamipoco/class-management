@@ -29,15 +29,4 @@ const Course = db.define("Course", {
   },
 });
 
-// Course.belongsToMany(Student, {
-//   through: "StudentCourse",
-//   as: "student",
-//   foreignKey: "course_id",
-// });
-
-// Course.belongsTo(Lecturer, {
-//   foreignKey: "lecturer_id",
-//   as: "lecturer",
-// });
-
 module.exports = Course;

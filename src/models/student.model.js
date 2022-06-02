@@ -41,15 +41,4 @@ const Student = db.define("Student", {
   },
 });
 
-// Student.belongsTo(Classroom, {
-//   foreignKey: "student_id",
-//   as: "classroom",
-// });
-
-// Student.belongsToMany(Course, {
-//   through: "StudentCourse",
-//   as: "course",
-//   foreignKey: "student_id",
-// });
-
 module.exports = Student;

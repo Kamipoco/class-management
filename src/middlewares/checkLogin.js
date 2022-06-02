@@ -5,14 +5,14 @@ import Student from "../models/student.model";
 config();
 
 module.exports = (req, res, next) => {
-  const { accessToken } = req.headers;
+  const { authorization } = req.headers;
 
   //authorization === Bearer effqweasdjkwqiulaksqdasd
-  if (!accessToken) {
+  if (!authorization) {
     return res.status(401).json({ error: "You must be logged in" });
   }
-  // const token = authorization.replace("Bearer", "");
-  jwt.verify(accessToken, process.env.SECRET_KEY, (err, decoded) => {
+  // const token = accessToken.replace("Bearer", "");
+  jwt.verify(authorization, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: "You must be logged in" });
     }

@@ -5,10 +5,18 @@ import nodemailer from "nodemailer";
 import { sendMail } from "../services/sendmail";
 import crypto from "crypto";
 import { Op } from "sequelize";
+import {
+  SignUpSchema,
+  SignInSchema,
+  forgotSchema,
+  newPasswordSchema,
+} from "../validations/auth";
 
 const signUp = async (req, res, next) => {
   try {
     const { student_name, email, password } = req.body;
+
+    const validation = await SignUpSchema.validateAsync(req.body);
 
     const check = await Student.findOne({
       where: {
@@ -46,6 +54,7 @@ const signUp = async (req, res, next) => {
 const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const validation = await SignInSchema.validateAsync(req.body);
 
     const check = await Student.findOne({
       where: {
@@ -80,9 +89,11 @@ const forgotPassword = async (req, res, next) => {
   try {
     const buffer = crypto.randomBytes(32);
     const token = buffer.toString("hex");
+    const { email } = req.body;
+    const validation = await forgotSchema.validateAsync(req.body);
 
     const student = await Student.findOne({
-      where: { email: req.body.email },
+      where: { email: email },
     });
 
     if (!student) {
@@ -132,6 +143,7 @@ const forgotPassword = async (req, res, next) => {
 const newPassword = async (req, res, next) => {
   try {
     const { token, password } = req.body;
+    const validation = await newPasswordSchema.validateAsync(req.body);
 
     if (!token) {
       return res.status(401).json({

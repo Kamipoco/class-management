@@ -13,27 +13,22 @@ const Lecturer = db.define("Lecturer", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
+  // email: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  // },
+  // password: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  // },
   bio: {
     type: Sequelize.STRING,
     defaultValue: "",
   },
-  role: {
-    type: Sequelize.STRING,
-    defaultValue: "lecturer",
-  },
+  // role: {
+  //   type: Sequelize.STRING,
+  //   defaultValue: "lecturer",
+  // },
 });
-
-// Lecturer.hasOne(Course, {
-//   foreignKey: "lecturer_id",
-//   as: "course",
-// });
 
 module.exports = Lecturer;
