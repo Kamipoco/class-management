@@ -11,7 +11,6 @@ const getStudents = async (req, res, next) => {
       include: [
         {
           model: Classroom,
-          attributes: ["id", "class_name"],
           as: "Classroom",
         },
       ],
