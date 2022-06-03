@@ -14,12 +14,12 @@ const getStudents = async (req, res, next) => {
         {
           model: Classroom,
           as: "Classroom",
-          include: [
-            {
-              model: ClassStudent,
-              as: "ClassStudent",
-            },
-          ],
+          // include: [
+          //   {
+          //     model: ClassStudent,
+          //     as: "ClassStudent",
+          //   },
+          // ],
         },
       ],
       order: [["createdAt", "DESC"]],
