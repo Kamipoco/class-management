@@ -17,7 +17,24 @@ const listLecturer = async (req, res, next) => {
   }
 };
 
-const detailLecturer = async (req, res, next) => {};
+const detailLecturer = async (req, res, next) => {
+  try {
+    const lecturer = await Lecturer.findByPk(req.params.id);
+
+    if (!lecturer) {
+      return res.status(404).json({
+        error: "Lecturer not found",
+      });
+    }
+
+    return res.status(200).json({
+      msg: "Success",
+      datas: lecturer,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const addLecturer = async (req, res, next) => {
   try {
