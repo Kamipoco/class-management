@@ -4,6 +4,8 @@ import Classroom from "../models/classroom.model";
 import Course from "../models/course.model";
 import ClassStudent from "../models/classstudent.model";
 import bcrypt from "bcryptjs";
+import { updateProfileSchema } from "../validations/student";
+import { changePasswordSchema } from "../validations/student";
 
 const getStudents = async (req, res, next) => {
   try {
@@ -12,6 +14,12 @@ const getStudents = async (req, res, next) => {
         {
           model: Classroom,
           as: "Classroom",
+          include: [
+            {
+              model: ClassStudent,
+              as: "ClassStudent",
+            },
+          ],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -28,9 +36,7 @@ const getStudents = async (req, res, next) => {
 
 const getStudentById = async (req, res, next) => {
   try {
-    const id = req.params.id;
-
-    const student = await Student.findByPk(id);
+    const student = await Student.findByPk(req.params.id);
 
     if (!student) {
       return res.status(404).json({
@@ -67,6 +73,7 @@ const addStudent = async (req, res, next) => {
 
 const updateProfileStudent = async (req, res, next) => {
   const { student_name, bio } = req.body;
+  const validation = await updateProfileSchema.validateAsync(req.body);
 
   const student = await Student.findByPk(req.params.id, {
     include: [
@@ -96,6 +103,7 @@ const updateProfileStudent = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
+  const validation = await changePasswordSchema.validateAsync(req.body);
 
   const infoStudent = await Student.findByPk(req.params.id);
   const isPassword = await bcrypt.compareSync(

@@ -1,9 +1,19 @@
 import { db } from "../config/config";
 import Course from "../models/course.model";
+import Lecturer from "../models/lecturer.model";
+import { addCourseSchema, updateCourseSchema } from "../validations/course";
 
 const listCourses = async (req, res, next) => {
   try {
-    const lists = await Course.findAll({});
+    const lists = await Course.findAll({
+      // include: [
+      //   {
+      //     model: Lecturer,
+      //     as: "Lecturer",
+      //   },
+      // ],
+      order: [["createdAt", "DESC"]],
+    });
 
     return res.status(200).json({
       msg: "success",
@@ -35,8 +45,11 @@ const courseDetail = async (req, res, next) => {
 
 const addCourse = async (req, res, next) => {
   try {
+    const { subject_name } = req.body;
+    const validation = await addCourseSchema.validateAsync(req.body);
+
     const course = await Course.create({
-      subject_name: req.body.subject_name,
+      subject_name: subject_name,
     });
 
     await course.save();
@@ -52,6 +65,7 @@ const addCourse = async (req, res, next) => {
 
 const updateCourse = async (req, res, next) => {
   const { subject_name, title, description } = req.body;
+  const validation = await updateCourseSchema.validateAsync(req.body);
 
   const course = await Course.findByPk(req.params.id);
 
@@ -73,9 +87,30 @@ const updateCourse = async (req, res, next) => {
   });
 };
 
+const deleteCourse = async (req, res, next) => {
+  try {
+    const result = await Course.findByPk(req.params.id);
+
+    if (!result) {
+      return res.status(404).json({
+        error: "Course not found!",
+      });
+    }
+
+    await result.destroy();
+
+    return res.status(200).json({
+      msg: "Deleted Course Successfully!",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   listCourses,
   addCourse,
   courseDetail,
   updateCourse,
+  deleteCourse,
 };

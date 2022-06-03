@@ -2,6 +2,7 @@ import { db } from "../config/config";
 import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
 import ClassStudent from "../models/classstudent.model";
+import { addClassSchema, addWithStudentSchema } from "../validations/classroom";
 
 const listClass = async (req, res, next) => {
   try {
@@ -9,7 +10,6 @@ const listClass = async (req, res, next) => {
       include: [
         {
           model: Student,
-          through: "ClassroomStudent",
           as: "Student",
         },
       ],
@@ -37,10 +37,11 @@ const listClass = async (req, res, next) => {
 
 const addClass = async (req, res, next) => {
   try {
-    const addClass = req.body.class_name;
+    const { class_name } = req.body;
+    const validation = await addClassSchema.validateAsync(req.body);
 
     const result = await Classroom.create({
-      class_name: addClass,
+      class_name: class_name,
     });
 
     return res.status(200).json({
@@ -54,6 +55,8 @@ const addClass = async (req, res, next) => {
 
 const addWithStudent = async (req, res, next) => {
   try {
+    const validation = await addWithStudentSchema.validateAsync(req.body);
+
     const result = await Classroom.create(
       {
         class_name: req.body.class_name,
@@ -80,9 +83,58 @@ const addWithStudent = async (req, res, next) => {
   }
 };
 
-const updateClass = async (req, res, next) => {};
+const updateClass = async (req, res, next) => {
+  try {
+    const { class_name, description, status } = req.body;
 
-const deleteClass = async (req, res, next) => {};
+    const result = await Classroom.findByPk(req.params.id, {
+      include: [
+        {
+          model: Student,
+          as: "Student",
+        },
+      ],
+    });
+
+    if (!result) {
+      return res.status(404).json({
+        error: "Classroom not found!",
+      });
+    }
+
+    const updateClass = result.update({
+      class_name: class_name,
+      description: description,
+      status: status,
+    });
+
+    return res.status(200).json({
+      msg: "updated Classroom",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteClass = async (req, res, next) => {
+  try {
+    const result = await Classroom.findByPk(req.params.id);
+
+    if (!result) {
+      return res.status(404).json({
+        error: "Classroom not found",
+      });
+    }
+
+    await result.destroy();
+
+    return res.status(200).json({
+      msg: "Deleted Classroom Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   listClass,
