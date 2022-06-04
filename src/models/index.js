@@ -5,18 +5,14 @@ import Lecturer from "../models/lecturer.model";
 import StudentCourse from "../models/studentcourse.model";
 import Course from "../models/course.model";
 import Classroom from "../models/classroom.model";
+import ClassStudent from "../models/classstudent.model";
 
 //#region Classroom
 Classroom.belongsToMany(Student, {
-  through: "ClassroomStudent",
+  through: ClassStudent,
   foreignKey: "classroom_id",
   as: "Student",
 });
-// Classroom.hasMany(Student, {
-//   through: "ClassroomStudent",
-//   foreignKey: "classroom_id",
-//   as: "Student",
-// });
 //#endregion
 
 //#region Lecturer
@@ -41,7 +37,7 @@ Course.belongsTo(Lecturer, {
 
 //#region Student
 Student.belongsToMany(Classroom, {
-  through: "ClassroomStudent",
+  through: ClassStudent,
   foreignKey: "classroom_id",
   as: "Classroom",
 });

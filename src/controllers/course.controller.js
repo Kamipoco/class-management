@@ -1,17 +1,24 @@
 import { db } from "../config/config";
 import Course from "../models/course.model";
 import Lecturer from "../models/lecturer.model";
+import Student from "../models/student.model";
 import { addCourseSchema, updateCourseSchema } from "../validations/course";
 
 const listCourses = async (req, res, next) => {
   try {
     const lists = await Course.findAll({
-      // include: [
-      //   {
-      //     model: Lecturer,
-      //     as: "Lecturer",
-      //   },
-      // ],
+      include: [
+        {
+          model: Lecturer,
+          as: "Lecturer",
+          attributes: ["lecturer_name", "bio"],
+        },
+        {
+          model: Student,
+          as: "Student",
+          attributes: ["student_name"],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
@@ -26,7 +33,14 @@ const listCourses = async (req, res, next) => {
 
 const courseDetail = async (req, res, next) => {
   try {
-    const course = await Course.findByPk(req.params.id);
+    const course = await Course.findByPk(req.params.id, {
+      include: [
+        {
+          model: Lecturer,
+          as: "Lecturer",
+        },
+      ],
+    });
 
     if (!course) {
       return res.status(404).json({

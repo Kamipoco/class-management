@@ -64,7 +64,7 @@ const signIn = async (req, res, next) => {
 
     if (!check) {
       return res.status(422).json({
-        message: "Invalid Email or Password",
+        errors: "Invalid Email or Password",
       });
     }
 
@@ -98,7 +98,7 @@ const forgotPassword = async (req, res, next) => {
 
     if (!student) {
       return res.status(422).json({
-        error: "User dont exists with that email",
+        errors: "User dont exists with that email",
       });
     }
 
@@ -147,7 +147,7 @@ const newPassword = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        error: "Unauthorized",
+        errors: "Unauthorized",
       });
     }
 
@@ -162,7 +162,7 @@ const newPassword = async (req, res, next) => {
 
     if (!check) {
       return res.status(422).json({
-        error: "Try again session expired",
+        errors: "Try again session expired",
       });
     }
 

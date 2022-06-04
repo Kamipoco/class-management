@@ -11,6 +11,7 @@ const listClass = async (req, res, next) => {
         {
           model: Student,
           as: "Student",
+          attributes: ["student_name"],
         },
       ],
       order: [

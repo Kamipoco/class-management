@@ -14,12 +14,12 @@ const getStudents = async (req, res, next) => {
         {
           model: Classroom,
           as: "Classroom",
-          // include: [
-          //   {
-          //     model: ClassStudent,
-          //     as: "ClassStudent",
-          //   },
-          // ],
+          attributes: ["class_name"],
+          // through: {
+          //   model: ClassStudent,
+          //   as: "ClassStudent",
+          //   attributes: ["classroom_id", "student_id"],
+          // },
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -36,11 +36,19 @@ const getStudents = async (req, res, next) => {
 
 const getStudentById = async (req, res, next) => {
   try {
-    const student = await Student.findByPk(req.params.id);
+    const student = await Student.findByPk(req.params.id, {
+      include: [
+        {
+          model: Classroom,
+          as: "Classroom",
+          attributes: ["class_name"],
+        },
+      ],
+    });
 
     if (!student) {
       return res.status(404).json({
-        msg: "Student not found",
+        error: "Student not found",
       });
     }
 
