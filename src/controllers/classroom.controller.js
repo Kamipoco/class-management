@@ -36,6 +36,24 @@ const listClass = async (req, res, next) => {
   }
 };
 
+const classDetail = async (req, res, next) => {
+  // return Classroom
+  // .findByPk(req.params.id, {
+  //   include: [{
+  //     model: Student,
+  //     as: 'students'
+  //   }],
+  // })
+  // .then((classroom) => {
+  //   if (!classroom) {
+  //     return res.status(404).send({
+  //       message: 'Classroom Not Found',
+  //     });
+  //   }
+  //   return res.status(200).send(classroom);
+  // })
+};
+
 const addClass = async (req, res, next) => {
   try {
     const { class_name } = req.body;
@@ -139,6 +157,7 @@ const deleteClass = async (req, res, next) => {
 
 module.exports = {
   listClass,
+  classDetail,
   addClass,
   addWithStudent,
   updateClass,

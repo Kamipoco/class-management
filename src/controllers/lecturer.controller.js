@@ -10,6 +10,7 @@ import {
 const listLecturer = async (req, res, next) => {
   try {
     const lists = await Lecturer.findAll({
+      //include Course => lay thong tin khoa hoc do lecturer dam nhan
       order: [["createdAt", "DESC"]],
     });
 
@@ -24,6 +25,7 @@ const listLecturer = async (req, res, next) => {
 
 const detailLecturer = async (req, res, next) => {
   try {
+    //them include Course
     const lecturer = await Lecturer.findByPk(req.params.id);
 
     if (!lecturer) {
@@ -68,7 +70,7 @@ const addWithCourse = async (req, res, next) => {
     const result = await Lecturer.create(
       {
         lecturer_name: lecturer_name,
-        subject_name: subject_name,
+        subject_name: subject_name, //co the lay id cua Course
       },
       {
         include: [

@@ -9,6 +9,7 @@ import { changePasswordSchema } from "../validations/student";
 
 const getStudents = async (req, res, next) => {
   try {
+    //phai include them model Course
     const lists = await Student.findAll({
       include: [
         {
@@ -36,6 +37,7 @@ const getStudents = async (req, res, next) => {
 
 const getStudentById = async (req, res, next) => {
   try {
+    //them include Course
     const student = await Student.findByPk(req.params.id, {
       include: [
         {
@@ -65,7 +67,7 @@ const addStudent = async (req, res, next) => {
   try {
     const result = await ClassStudent.create({
       classroom_id: req.body.classroom_id,
-      student_id: req.body.student_id,
+      student_id: req.body.student_id, //nen add student_name
     });
 
     await result.save();
@@ -79,10 +81,40 @@ const addStudent = async (req, res, next) => {
   }
 };
 
+const addCourse = async (req, res, next) => {
+  // return Student
+  // .findByPk(req.body.student_id, {
+  //   include: [{
+  //     model: Classroom,
+  //     as: 'classroom'
+  //   },{
+  //     model: Course,
+  //     as: 'courses'
+  //   }],
+  // })
+  // .then((student) => {
+  //   if (!student) {
+  //     return res.status(404).send({
+  //       message: 'Student Not Found',
+  //     });
+  //   }
+  //   Course.findByPk(req.body.course_id).then((course) => {
+  //     if (!course) {
+  //       return res.status(404).send({
+  //         message: 'Course Not Found',
+  //       });
+  //     }
+  //     student.addCourse(course);
+  //     return res.status(200).send(student);
+  //   })
+  // })
+};
+
 const updateProfileStudent = async (req, res, next) => {
   const { student_name, bio } = req.body;
   const validation = await updateProfileSchema.validateAsync(req.body);
 
+  //include them model Course
   const student = await Student.findByPk(req.params.id, {
     include: [
       {
@@ -154,6 +186,7 @@ module.exports = {
   getStudents,
   getStudentById,
   addStudent,
+  addCourse,
   updateProfileStudent,
   changePassword,
   deleteStudent,
