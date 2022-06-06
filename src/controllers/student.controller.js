@@ -3,13 +3,13 @@ import Student from "../models/student.model";
 import Classroom from "../models/classroom.model";
 import Course from "../models/course.model";
 import ClassStudent from "../models/classstudent.model";
+import StudentCourse from "../models/studentcourse.model";
 import bcrypt from "bcryptjs";
 import { updateProfileSchema } from "../validations/student";
 import { changePasswordSchema } from "../validations/student";
 
 const getStudents = async (req, res, next) => {
   try {
-    //phai include them model Course
     const lists = await Student.findAll({
       include: [
         {
@@ -22,13 +22,18 @@ const getStudents = async (req, res, next) => {
           //   attributes: ["classroom_id", "student_id"],
           // },
         },
+        {
+          model: Course,
+          as: "Course",
+          attributes: ["subject_name", "title", "description"],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
 
     return res.status(200).json({
       msg: "success",
-      datas: lists,
+      data: lists,
     });
   } catch (error) {
     console.log(error);
@@ -37,13 +42,17 @@ const getStudents = async (req, res, next) => {
 
 const getStudentById = async (req, res, next) => {
   try {
-    //them include Course
     const student = await Student.findByPk(req.params.id, {
       include: [
         {
           model: Classroom,
           as: "Classroom",
           attributes: ["class_name"],
+        },
+        {
+          model: Course,
+          as: "Course",
+          attributes: ["subject_name", "title", "description"],
         },
       ],
     });
@@ -56,70 +65,62 @@ const getStudentById = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "Success",
-      datas: student,
+      data: student,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const addStudent = async (req, res, next) => {
+const studentJoinClass = async (req, res, next) => {
   try {
     const result = await ClassStudent.create({
       classroom_id: req.body.classroom_id,
-      student_id: req.body.student_id, //nen add student_name
+      student_id: req.user.id,
     });
 
     await result.save();
 
     return res.status(200).json({
       msg: "Success",
-      datas: result,
+      data: result,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const addCourse = async (req, res, next) => {
-  // return Student
-  // .findByPk(req.body.student_id, {
-  //   include: [{
-  //     model: Classroom,
-  //     as: 'classroom'
-  //   },{
-  //     model: Course,
-  //     as: 'courses'
-  //   }],
-  // })
-  // .then((student) => {
-  //   if (!student) {
-  //     return res.status(404).send({
-  //       message: 'Student Not Found',
-  //     });
-  //   }
-  //   Course.findByPk(req.body.course_id).then((course) => {
-  //     if (!course) {
-  //       return res.status(404).send({
-  //         message: 'Course Not Found',
-  //       });
-  //     }
-  //     student.addCourse(course);
-  //     return res.status(200).send(student);
-  //   })
-  // })
+const studentJoinCourse = async (req, res, next) => {
+  try {
+    const result = await StudentCourse.create({
+      student_id: req.user.id,
+      course_id: req.body.course_id,
+    });
+
+    await result.save();
+
+    return res.status(200).json({
+      msg: " success",
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const updateProfileStudent = async (req, res, next) => {
   const { student_name, bio } = req.body;
   const validation = await updateProfileSchema.validateAsync(req.body);
 
-  //include them model Course
   const student = await Student.findByPk(req.params.id, {
     include: [
       {
         model: Classroom,
         as: "Classroom",
+      },
+      {
+        model: Course,
+        as: "Course",
       },
     ],
   });
@@ -137,7 +138,7 @@ const updateProfileStudent = async (req, res, next) => {
 
   return res.status(200).json({
     msg: "Updated Successfully",
-    datas: updated,
+    data: updated,
   });
 };
 
@@ -185,8 +186,8 @@ const deleteStudent = async (req, res, next) => {
 module.exports = {
   getStudents,
   getStudentById,
-  addStudent,
-  addCourse,
+  studentJoinClass,
+  studentJoinCourse,
   updateProfileStudent,
   changePassword,
   deleteStudent,

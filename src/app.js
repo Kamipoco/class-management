@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", async (req, res) => {
-  res.send("Home");
+  res.send("Test Server");
 });
 app.use("/", AuthRoutes);
 app.use("/", StudentRoutes);
@@ -33,6 +33,10 @@ app.use("/", LecturerRoutes);
 
 app.listen(process.env.APP_PORT, async () => {
   await db.sync();
+  console.log(`=================================`);
+  console.log(`======= ENV: ${process.env.NODE_ENV} =======`);
+  console.log(`🚀 App listening on the port ${process.env.APP_PORT}`);
+  console.log(`=================================`);
   console.log(
     `Hi, I am running at http://${process.env.APP_HOST}:${process.env.APP_PORT}/`
   );

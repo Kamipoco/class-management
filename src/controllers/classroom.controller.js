@@ -8,6 +8,12 @@ const listClass = async (req, res, next) => {
   try {
     const lists = await Classroom.findAll({
       include: [
+        // {
+        //   model: Student,
+        //   through: ClassStudent,
+        //   as: "Student",
+        //   attributes: ["student_name"],
+        // },
         {
           model: Student,
           as: "Student",
@@ -37,24 +43,29 @@ const listClass = async (req, res, next) => {
 };
 
 const classDetail = async (req, res, next) => {
-  // return Classroom
-  // .findByPk(req.params.id, {
-  //   include: [{
-  //     model: Student,
-  //     as: 'students'
-  //   }],
-  // })
-  // .then((classroom) => {
-  //   if (!classroom) {
-  //     return res.status(404).send({
-  //       message: 'Classroom Not Found',
-  //     });
-  //   }
-  //   return res.status(200).send(classroom);
-  // })
+  const result = await Classroom.findByPk(req.params.id, {
+    include: [
+      {
+        model: Student,
+        as: "Student",
+        attributes: ["student_name", "bio"],
+      },
+    ],
+  });
+
+  if (!result) {
+    return res.status(404).json({
+      error: "Classroom not found",
+    });
+  }
+
+  return res.status(200).json({
+    msg: "Success",
+    datas: result,
+  });
 };
 
-const addClass = async (req, res, next) => {
+const createClass = async (req, res, next) => {
   try {
     const { class_name } = req.body;
     const validation = await addClassSchema.validateAsync(req.body);
@@ -72,24 +83,16 @@ const addClass = async (req, res, next) => {
   }
 };
 
-const addWithStudent = async (req, res, next) => {
+//add student -> classroom
+const classAddStudent = async (req, res, next) => {
   try {
+    const { classroom_id, student_id } = req.body;
     const validation = await addWithStudentSchema.validateAsync(req.body);
 
-    const result = await Classroom.create(
-      {
-        class_name: req.body.class_name,
-        student_id: req.body.student_id,
-      },
-      {
-        include: [
-          {
-            model: Student,
-            as: "Student",
-          },
-        ],
-      }
-    );
+    const result = await ClassStudent.create({
+      classroom_id: classroom_id,
+      student_id: student_id,
+    });
 
     await result.save();
 
@@ -158,8 +161,8 @@ const deleteClass = async (req, res, next) => {
 module.exports = {
   listClass,
   classDetail,
-  addClass,
-  addWithStudent,
+  createClass,
+  classAddStudent,
   updateClass,
   deleteClass,
 };

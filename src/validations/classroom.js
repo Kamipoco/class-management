@@ -5,8 +5,8 @@ const addClassSchema = Joi.object({
 });
 
 const addWithStudentSchema = Joi.object({
-  class_name: Joi.string().min(2).max(30).required(),
-  student_id: Joi.number().integer(),
+  classroom_id: Joi.number().integer().required(),
+  student_id: Joi.number().integer().required(),
 });
 
 module.exports = {

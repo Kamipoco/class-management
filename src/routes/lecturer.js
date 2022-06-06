@@ -3,9 +3,9 @@ import {
   listLecturer,
   detailLecturer,
   addLecturer,
-  addWithCourse,
+  // addWithCourse,
   updateLecturer,
-  deleteCourse,
+  deleteLecturer,
 } from "../controllers/lecturer.controller";
 
 const router = express.Router();
@@ -13,8 +13,8 @@ const router = express.Router();
 router.get("/list-lecturer", listLecturer);
 router.get("/lecturer/:id", detailLecturer);
 router.post("/add-lecturer", addLecturer);
-router.post("/addWithCourse", addWithCourse);
+// router.post("/addWithCourse", addWithCourse);
 router.put("/update-lecturer/:id", updateLecturer);
-router.delete("/delete-lecturer/:id", deleteCourse);
+router.delete("/delete-lecturer/:id", deleteLecturer);
 
 module.exports = router;

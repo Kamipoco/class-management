@@ -16,7 +16,7 @@ const listCourses = async (req, res, next) => {
         {
           model: Student,
           as: "Student",
-          attributes: ["student_name"],
+          attributes: ["student_name", "email"],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -24,7 +24,7 @@ const listCourses = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: lists,
+      data: lists,
     });
   } catch (error) {
     console.log(error);
@@ -38,6 +38,12 @@ const courseDetail = async (req, res, next) => {
         {
           model: Lecturer,
           as: "Lecturer",
+          attributes: ["lecturer_name", "bio"],
+        },
+        {
+          model: Student,
+          as: "Student",
+          attributes: ["student_name", "email"],
         },
       ],
     });
@@ -50,14 +56,14 @@ const courseDetail = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: course,
+      data: course,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const addCourse = async (req, res, next) => {
+const createCourse = async (req, res, next) => {
   try {
     const { subject_name } = req.body;
     const validation = await addCourseSchema.validateAsync(req.body);
@@ -70,11 +76,51 @@ const addCourse = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: course,
+      data: course,
     });
   } catch (error) {
     console.log(error);
   }
+};
+
+const addLecturer = async (req, res, next) => {
+  const course = await Course.findByPk(req.params.id, {
+    include: [
+      {
+        model: Lecturer,
+        as: "Lecturer",
+        attributes: ["lecturer_name", "bio"],
+      },
+    ],
+  });
+
+  if (!course) {
+    return res.status(404).json({
+      error: "Course not found!",
+    });
+  }
+
+  const result = await course.update(
+    {
+      lecturer_id: req.body.lecturer_id,
+    },
+    {
+      include: [
+        {
+          model: Lecturer,
+          as: "Lecturer",
+          attributes: ["lecturer_name", "bio"],
+        },
+      ],
+    }
+  );
+
+  await result.save();
+
+  return res.status(200).json({
+    msg: "Updated Successfully!",
+    // data: course,
+  });
 };
 
 const updateCourse = async (req, res, next) => {
@@ -97,7 +143,7 @@ const updateCourse = async (req, res, next) => {
 
   return res.status(200).json({
     msg: "Updated Successfully",
-    datas: updated,
+    data: updated,
   });
 };
 
@@ -123,8 +169,9 @@ const deleteCourse = async (req, res, next) => {
 
 module.exports = {
   listCourses,
-  addCourse,
   courseDetail,
+  createCourse,
+  addLecturer,
   updateCourse,
   deleteCourse,
 };

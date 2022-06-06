@@ -10,13 +10,19 @@ import {
 const listLecturer = async (req, res, next) => {
   try {
     const lists = await Lecturer.findAll({
-      //include Course => lay thong tin khoa hoc do lecturer dam nhan
+      include: [
+        {
+          model: Course,
+          as: "Course",
+          attributes: ["subject_name", "title", "description"],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
     return res.status(200).json({
       msg: "success",
-      datas: lists,
+      data: lists,
     });
   } catch (error) {
     console.log(error);
@@ -25,8 +31,15 @@ const listLecturer = async (req, res, next) => {
 
 const detailLecturer = async (req, res, next) => {
   try {
-    //them include Course
-    const lecturer = await Lecturer.findByPk(req.params.id);
+    const lecturer = await Lecturer.findByPk(req.params.id, {
+      include: [
+        {
+          model: Course,
+          as: "Course",
+          attributes: ["subject_name", "title", "description"],
+        },
+      ],
+    });
 
     if (!lecturer) {
       return res.status(404).json({
@@ -36,7 +49,7 @@ const detailLecturer = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "Success",
-      datas: lecturer,
+      data: lecturer,
     });
   } catch (error) {
     console.log(error);
@@ -55,41 +68,43 @@ const addLecturer = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: lecturer,
+      data: lecturer,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const addWithCourse = async (req, res, next) => {
-  try {
-    const { lecturer_name, subject_name } = req.body;
-    const validation = await addWithCourseSchema.validateAsync(req.body);
+//(fail) them thong tin course vao lecturer
+// const addWithCourse = async (req, res, next) => {
+//   try {
+//     const { lecturer_name, subject_name } = req.body;
+//     // const validation = await addWithCourseSchema.validateAsync(req.body);
 
-    const result = await Lecturer.create(
-      {
-        lecturer_name: lecturer_name,
-        subject_name: subject_name, //co the lay id cua Course
-      },
-      {
-        include: [
-          {
-            model: Course,
-            as: "Course",
-          },
-        ],
-      }
-    );
+//     const result = await Lecturer.create(
+//       {
+//         lecturer_name: lecturer_name,
 
-    return res.status(200).json({
-      msg: "success",
-      datas: result,
-    });
-  } catch (error) {
-    console.log();
-  }
-};
+//         // subject_name: subject_name, //co the lay id cua Course
+//       },
+//       {
+//         include: [
+//           {
+//             model: Course,
+//             as: "Course",
+//           },
+//         ],
+//       }
+//     );
+
+//     return res.status(200).json({
+//       msg: "success",
+//       data: result,
+//     });
+//   } catch (error) {
+//     console.log();
+//   }
+// };
 
 const updateLecturer = async (req, res, next) => {
   try {
@@ -124,7 +139,7 @@ const updateLecturer = async (req, res, next) => {
   }
 };
 
-const deleteCourse = async (req, res, next) => {
+const deleteLecturer = async (req, res, next) => {
   try {
     const result = await Lecturer.findByPk(req.params.id);
 
@@ -148,7 +163,7 @@ module.exports = {
   listLecturer,
   detailLecturer,
   addLecturer,
-  addWithCourse,
+  // addWithCourse,
   updateLecturer,
-  deleteCourse,
+  deleteLecturer,
 };

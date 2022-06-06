@@ -3,8 +3,8 @@ import checkLogin from "../middlewares/checkLogin";
 import {
   listClass,
   classDetail,
-  addClass,
-  addWithStudent,
+  createClass,
+  classAddStudent,
   updateClass,
   deleteClass,
 } from "../controllers/classroom.controller";
@@ -12,9 +12,9 @@ import {
 const router = express.Router();
 
 router.get("/list-class", listClass);
-router.get("class-detail", classDetail);
-router.post("/add-class", addClass);
-router.post("/add-with-student", addWithStudent);
+router.get("/class-detail/:id", classDetail);
+router.post("/add-class", createClass);
+router.post("/add-with-student", classAddStudent);
 router.put("/update-class/:id", updateClass);
 router.delete("/delete-class/:id", deleteClass);
 
