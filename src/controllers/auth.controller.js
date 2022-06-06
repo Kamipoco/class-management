@@ -46,7 +46,7 @@ const signUp = async (req, res, next) => {
 
       await student.save();
 
-      return res.status(200).json({ msg: "Success", data: { student } });
+      return res.status(200).json({ msg: "success", data: student });
     });
   } catch (error) {
     console.log(error);
@@ -79,7 +79,7 @@ const signIn = async (req, res, next) => {
     const token = signJWT(check);
 
     return res.status(200).json({
-      message: "Login Success",
+      message: "success",
       token,
     });
   } catch (error) {
@@ -216,7 +216,7 @@ const Register = async (req, res, next) => {
 
       await lecturer.save();
 
-      return res.status(200).json({ msg: "Success", data: lecturer });
+      return res.status(200).json({ msg: "success", data: lecturer });
     });
   } catch (error) {
     console.log(error);
@@ -248,7 +248,7 @@ const Login = async (req, res, next) => {
     const token = signJWT(check);
 
     return res.status(200).json({
-      message: "Login Success",
+      msg: "success",
       token,
     });
   } catch (error) {
