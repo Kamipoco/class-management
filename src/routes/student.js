@@ -15,10 +15,10 @@ const router = express.Router();
 
 router.get("/students", checkLogin, getStudents);
 router.get("/student/:id", checkLogin, getStudentById);
-router.post("/join-class", checkLogin, checkRoles, studentJoinClass);
-router.post("/join-course", checkLogin, checkRoles, studentJoinCourse);
-router.put("/update-student/:id", checkLogin, checkRoles, updateProfileStudent);
-router.put("/change-password/:id", checkLogin, checkRoles, changePassword);
-router.delete("/delete-student/:id", checkLogin, checkRoles, deleteStudent);
+router.post("/student/join-class", checkLogin, studentJoinClass);
+router.post("/student/join-course", checkLogin, studentJoinCourse);
+router.put("/student/update/:id", checkLogin, updateProfileStudent);
+router.put("/student/change-password/:id", checkLogin, changePassword);
+router.delete("/student/remove/:id", checkLogin, deleteStudent);
 
 module.exports = router;

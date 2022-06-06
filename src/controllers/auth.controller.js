@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
 import Student from "../models/student.model";
+import Lecturer from "../models/lecturer.model";
 import nodemailer from "nodemailer";
 import { sendMail } from "../services/sendmail";
 import crypto from "crypto";
@@ -12,6 +13,7 @@ import {
   newPasswordSchema,
 } from "../validations/auth";
 
+//#region Auth Student
 const signUp = async (req, res, next) => {
   try {
     const { student_name, email, password } = req.body;
@@ -181,9 +183,86 @@ const newPassword = async (req, res, next) => {
   }
 };
 
+//#endregion
+
+//#region Auth Admin
+const Register = async (req, res, next) => {
+  try {
+    const { lecturer_name, email, password } = req.body;
+
+    const check = await Lecturer.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (check) {
+      return res.status(422).json({
+        status: false,
+        errors: "User already exists with that email or username!",
+      });
+    }
+
+    bcrypt.hash(password, 12, async (error, passwordhashed) => {
+      if (error) {
+        console.log(error);
+      }
+
+      const lecturer = await Lecturer.create({
+        lecturer_name,
+        email,
+        password: passwordhashed,
+      });
+
+      await lecturer.save();
+
+      return res.status(200).json({ msg: "Success", data: lecturer });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const check = await Lecturer.findOne({
+      where: {
+        email: email.toLowerCase().toString(),
+      },
+    });
+
+    if (!check) {
+      return res.status(422).json({
+        errors: "Invalid Email or Password",
+      });
+    }
+
+    const comparePassword = await bcrypt.compare(password, check.password);
+
+    if (!comparePassword) {
+      return res.status(400).json({ message: "Invalid Pw" });
+    }
+
+    const token = signJWT(check);
+
+    return res.status(200).json({
+      message: "Login Success",
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//#endregion
+
 module.exports = {
   signUp,
   signIn,
   forgotPassword,
   newPassword,
+  Register,
+  Login,
 };

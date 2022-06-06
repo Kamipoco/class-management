@@ -144,9 +144,9 @@ const updateProfileStudent = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
-  const validation = await changePasswordSchema.validateAsync(req.body);
+  // const validation = await changePasswordSchema.validateAsync(req.body);
 
-  const infoStudent = await Student.findByPk(req.params.id);
+  const infoStudent = await Student.findByPk(req.params.id); //req.user.id
   const isPassword = await bcrypt.compareSync(
     currentPassword,
     infoStudent.password
@@ -168,7 +168,7 @@ const changePassword = async (req, res, next) => {
 };
 
 const deleteStudent = async (req, res, next) => {
-  const result = await Student.findByPk(req.params.id);
+  const result = await Student.findByPk(req.params.id); //req.user.id
 
   if (!result) {
     return res.status(404).json({

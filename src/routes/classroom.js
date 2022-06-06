@@ -1,5 +1,6 @@
 import express from "express";
 import checkLogin from "../middlewares/checkLogin";
+import checkRoles from "../middlewares/checkRoles";
 import {
   listClass,
   classDetail,
@@ -11,11 +12,16 @@ import {
 
 const router = express.Router();
 
-router.get("/list-class", listClass);
-router.get("/class-detail/:id", classDetail);
-router.post("/add-class", createClass);
-router.post("/add-with-student", classAddStudent);
-router.put("/update-class/:id", updateClass);
-router.delete("/delete-class/:id", deleteClass);
+router.get("/admin/classes", checkLogin, checkRoles, listClass);
+router.get("/admin/class/:id", checkLogin, checkRoles, classDetail);
+router.post("/admin/class/create", checkLogin, checkRoles, createClass);
+router.post(
+  "/admin/class/add-student",
+  checkLogin,
+  checkRoles,
+  classAddStudent
+);
+router.put("/admin/class/update/:id", updateClass);
+router.delete("/admin/class/remove/:id", deleteClass);
 
 module.exports = router;

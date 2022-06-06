@@ -1,20 +1,31 @@
 import express from "express";
+import checkLogin from "../middlewares/checkLogin";
+import checkRoles from "../middlewares/checkRoles";
 import {
   listLecturer,
   detailLecturer,
-  addLecturer,
-  // addWithCourse,
+  // addLecturer,
   updateLecturer,
   deleteLecturer,
 } from "../controllers/lecturer.controller";
 
 const router = express.Router();
 
-router.get("/list-lecturer", listLecturer);
-router.get("/lecturer/:id", detailLecturer);
-router.post("/add-lecturer", addLecturer);
-// router.post("/addWithCourse", addWithCourse);
-router.put("/update-lecturer/:id", updateLecturer);
-router.delete("/delete-lecturer/:id", deleteLecturer);
+router.get("/admin/lecturers", checkLogin, checkRoles, listLecturer);
+router.get("/admin/lecturer/:id", checkLogin, checkRoles, detailLecturer);
+//create khong can ==> Sign In, Sign Up rieng cho Lecturer
+// router.post("/admin/lecturer/create", checkLogin, checkRoles, addLecturer);
+router.put(
+  "/admin/lecturer/update/:id",
+  checkLogin,
+  checkRoles,
+  updateLecturer
+);
+router.delete(
+  "/admin/lecturer/remove/:id",
+  checkLogin,
+  checkRoles,
+  deleteLecturer
+);
 
 module.exports = router;

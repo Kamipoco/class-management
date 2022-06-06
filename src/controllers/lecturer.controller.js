@@ -75,37 +75,6 @@ const addLecturer = async (req, res, next) => {
   }
 };
 
-//(fail) them thong tin course vao lecturer
-// const addWithCourse = async (req, res, next) => {
-//   try {
-//     const { lecturer_name, subject_name } = req.body;
-//     // const validation = await addWithCourseSchema.validateAsync(req.body);
-
-//     const result = await Lecturer.create(
-//       {
-//         lecturer_name: lecturer_name,
-
-//         // subject_name: subject_name, //co the lay id cua Course
-//       },
-//       {
-//         include: [
-//           {
-//             model: Course,
-//             as: "Course",
-//           },
-//         ],
-//       }
-//     );
-
-//     return res.status(200).json({
-//       msg: "success",
-//       data: result,
-//     });
-//   } catch (error) {
-//     console.log();
-//   }
-// };
-
 const updateLecturer = async (req, res, next) => {
   try {
     const { lecturer_name, bio } = req.body;
@@ -163,7 +132,6 @@ module.exports = {
   listLecturer,
   detailLecturer,
   addLecturer,
-  // addWithCourse,
   updateLecturer,
   deleteLecturer,
 };
