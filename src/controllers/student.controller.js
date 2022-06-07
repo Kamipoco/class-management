@@ -7,6 +7,7 @@ import StudentCourse from "../models/studentcourse.model";
 import bcrypt from "bcryptjs";
 import { updateProfileSchema } from "../validations/student";
 import { changePasswordSchema } from "../validations/student";
+import { Op } from "sequelize";
 
 const getStudents = async (req, res, next) => {
   try {
@@ -16,11 +17,6 @@ const getStudents = async (req, res, next) => {
           model: Classroom,
           as: "Classroom",
           attributes: ["class_name"],
-          // through: {
-          //   model: ClassStudent,
-          //   as: "ClassStudent",
-          //   attributes: ["classroom_id", "student_id"],
-          // },
         },
         {
           model: Course,
@@ -29,6 +25,9 @@ const getStudents = async (req, res, next) => {
         },
       ],
       order: [["createdAt", "DESC"]],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     return res.status(200).json({
@@ -55,6 +54,9 @@ const getStudentById = async (req, res, next) => {
           attributes: ["subject_name", "title", "description"],
         },
       ],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     if (!student) {
@@ -137,7 +139,7 @@ const updateProfileStudent = async (req, res, next) => {
   });
 
   return res.status(200).json({
-    msg: "Updated Successfully",
+    msg: "success",
     data: updated,
   });
 };
@@ -162,7 +164,7 @@ const changePassword = async (req, res, next) => {
   await infoStudent.save();
 
   return res.status(200).json({
-    msg: "Changed Password Successfully",
+    msg: "success",
   });
 };
 
@@ -178,9 +180,110 @@ const deleteStudent = async (req, res, next) => {
   await result.destroy();
 
   return res.status(200).json({
-    msg: "Student deleted successfully",
+    msg: "success",
   });
 };
+
+//#region
+const listStudent = async (req, res, next) => {
+  const { page } = req.query;
+
+  const number = Number(page);
+  const per_page = 4;
+
+  try {
+    let students;
+
+    if (number === 1 || number === 0) {
+      students = await Student.findAll({
+        include: [
+          {
+            model: Classroom,
+            as: "Classroom",
+            attributes: ["class_name"],
+          },
+          {
+            model: Course,
+            as: "Course",
+            attributes: ["subject_name", "title", "description"],
+          },
+        ],
+        // order: [["createdAt", "DESC"]],
+        limit: per_page,
+        offset: 0,
+      });
+    } else {
+      const skips = per_page * (number - 1);
+      students = await Student.findAll({
+        include: [
+          {
+            model: Classroom,
+            as: "Classroom",
+            attributes: ["class_name"],
+          },
+          {
+            model: Course,
+            as: "Course",
+            attributes: ["subject_name", "title", "description"],
+          },
+        ],
+        // order: [["createdAt", "DESC"]],
+        offset: skips,
+        limit: per_page,
+      });
+    }
+
+    return res.status(200).json({
+      msg: "success",
+      data: students,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const searchStudent = async (req, res, next) => {
+  try {
+    const fieldSearch = req.query.name;
+
+    if (!fieldSearch || fieldSearch.length === 0) {
+      return res.status(422).json({ error: "Please fill in all fields" });
+    }
+
+    const student = await Student.findAndCountAll({
+      where: {
+        student_name: { [Op.iLike]: fieldSearch },
+      },
+      include: [
+        {
+          model: Classroom,
+          as: "Classroom",
+          attributes: ["class_name"],
+        },
+        {
+          model: Course,
+          as: "Course",
+          attributes: ["subject_name", "title", "description"],
+        },
+      ],
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+
+    if (student.count === 0) {
+      return res.status(404).json({ status: 404, message: "Not Found!" });
+    }
+
+    return res.status(200).json({
+      msg: "success",
+      data: student,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+//#endregion
 
 module.exports = {
   getStudents,
@@ -190,4 +293,6 @@ module.exports = {
   updateProfileStudent,
   changePassword,
   deleteStudent,
+  listStudent,
+  searchStudent,
 };

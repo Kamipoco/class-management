@@ -7,6 +7,8 @@ import {
   updateProfileStudent,
   changePassword,
   deleteStudent,
+  listStudent,
+  searchStudent,
 } from "../controllers/student.controller";
 import checkLogin from "../middlewares/checkLogin";
 import checkRoles from "../middlewares/checkRoles";
@@ -14,11 +16,15 @@ import checkRoles from "../middlewares/checkRoles";
 const router = express.Router();
 
 router.get("/students", checkLogin, getStudents);
+router.get("/students/search", checkLogin, searchStudent);
 router.get("/student/:id", checkLogin, getStudentById);
 router.post("/student/join-class", checkLogin, studentJoinClass);
 router.post("/student/join-course", checkLogin, studentJoinCourse);
 router.put("/student/update/:id", checkLogin, updateProfileStudent);
 router.put("/student/change-password/:id", checkLogin, changePassword);
 router.delete("/student/remove/:id", checkLogin, deleteStudent);
+
+//pagination & filter
+router.get("/lists", checkLogin, listStudent);
 
 module.exports = router;

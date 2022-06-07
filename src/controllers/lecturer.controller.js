@@ -18,6 +18,9 @@ const listLecturer = async (req, res, next) => {
         },
       ],
       order: [["createdAt", "DESC"]],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     return res.status(200).json({
@@ -39,6 +42,9 @@ const detailLecturer = async (req, res, next) => {
           attributes: ["subject_name", "title", "description"],
         },
       ],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     if (!lecturer) {
@@ -87,6 +93,9 @@ const updateLecturer = async (req, res, next) => {
           as: "Course",
         },
       ],
+      attributes: {
+        exclude: ["password"],
+      },
     });
 
     if (!result) {
@@ -101,7 +110,8 @@ const updateLecturer = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      msg: "Updated successfully!",
+      msg: "success",
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -121,7 +131,7 @@ const deleteLecturer = async (req, res, next) => {
     await result.destroy();
 
     return res.status(200).json({
-      msg: "Deleted Successfully",
+      msg: "success",
     });
   } catch (error) {
     console.log(error);

@@ -118,8 +118,8 @@ const addLecturer = async (req, res, next) => {
   await result.save();
 
   return res.status(200).json({
-    msg: "Updated Successfully!",
-    // data: course,
+    msg: "success",
+    data: course,
   });
 };
 
@@ -142,7 +142,7 @@ const updateCourse = async (req, res, next) => {
   });
 
   return res.status(200).json({
-    msg: "Updated Successfully",
+    msg: "success",
     data: updated,
   });
 };
@@ -160,7 +160,7 @@ const deleteCourse = async (req, res, next) => {
     await result.destroy();
 
     return res.status(200).json({
-      msg: "Deleted Course Successfully!",
+      msg: "success",
     });
   } catch (error) {
     console.log(error);

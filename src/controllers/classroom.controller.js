@@ -35,7 +35,7 @@ const listClass = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: lists,
+      data: lists,
     });
   } catch (error) {
     console.log(error);
@@ -61,7 +61,7 @@ const classDetail = async (req, res, next) => {
 
   return res.status(200).json({
     msg: "Success",
-    datas: result,
+    data: result,
   });
 };
 
@@ -76,7 +76,7 @@ const createClass = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: result,
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -98,7 +98,7 @@ const classAddStudent = async (req, res, next) => {
 
     return res.status(200).json({
       msg: "success",
-      datas: result,
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -131,7 +131,8 @@ const updateClass = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      msg: "updated Classroom",
+      msg: "success",
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -151,7 +152,7 @@ const deleteClass = async (req, res, next) => {
     await result.destroy();
 
     return res.status(200).json({
-      msg: "Deleted Classroom Successfully",
+      msg: "success",
     });
   } catch (error) {
     console.log(error);
