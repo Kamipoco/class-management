@@ -115,16 +115,19 @@ const updateProfileStudent = async (req, res, next) => {
   const validation = await updateProfileSchema.validateAsync(req.body);
 
   const student = await Student.findByPk(req.params.id, {
-    include: [
-      {
-        model: Classroom,
-        as: "Classroom",
-      },
-      {
-        model: Course,
-        as: "Course",
-      },
-    ],
+    // include: [
+    //   {
+    //     model: Classroom,
+    //     as: "Classroom",
+    //   },
+    //   {
+    //     model: Course,
+    //     as: "Course",
+    //   },
+    // ],
+    attributes: {
+      exclude: ["password", "resetToken", "expireToken"],
+    },
   });
 
   if (!student) {

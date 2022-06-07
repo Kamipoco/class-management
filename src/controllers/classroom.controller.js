@@ -110,12 +110,12 @@ const updateClass = async (req, res, next) => {
     const { class_name, description, status } = req.body;
 
     const result = await Classroom.findByPk(req.params.id, {
-      include: [
-        {
-          model: Student,
-          as: "Student",
-        },
-      ],
+      // include: [
+      //   {
+      //     model: Student,
+      //     as: "Student",
+      //   },
+      // ],
     });
 
     if (!result) {

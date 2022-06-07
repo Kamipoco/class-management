@@ -87,12 +87,12 @@ const updateLecturer = async (req, res, next) => {
     const validation = await updateLecturerSchema.validateAsync(req.body);
 
     const result = await Lecturer.findByPk(req.params.id, {
-      include: [
-        {
-          model: Course,
-          as: "Course",
-        },
-      ],
+      // include: [
+      //   {
+      //     model: Course,
+      //     as: "Course",
+      //   },
+      // ],
       attributes: {
         exclude: ["password"],
       },
