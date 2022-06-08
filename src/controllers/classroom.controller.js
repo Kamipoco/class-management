@@ -60,7 +60,7 @@ const classDetail = async (req, res, next) => {
   }
 
   return res.status(200).json({
-    msg: "Success",
+    msg: "success",
     data: result,
   });
 };

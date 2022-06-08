@@ -84,7 +84,7 @@ const studentJoinClass = async (req, res, next) => {
     await result.save();
 
     return res.status(200).json({
-      msg: "Success",
+      msg: "success",
       data: result,
     });
   } catch (error) {
