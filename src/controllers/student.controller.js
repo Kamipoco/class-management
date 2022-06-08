@@ -8,10 +8,13 @@ import bcrypt from "bcryptjs";
 import { updateProfileSchema } from "../validations/student";
 import { changePasswordSchema } from "../validations/student";
 import { Op } from "sequelize";
+import { exportLecturersToExcel } from "../services/convertJson";
 
 const getStudents = async (req, res, next) => {
   try {
-    const lists = await Student.findAll({
+    const { download } = req.query;
+
+    const students = await Student.findAll({
       include: [
         {
           model: Classroom,
@@ -30,10 +33,36 @@ const getStudents = async (req, res, next) => {
       },
     });
 
+    if (download === "true") {
+      //json -> excel
+      const workSheetColumnName = [
+        "student_name",
+        "email",
+        "bio",
+        "role",
+        "createdAt",
+        "updatedAt",
+      ];
+
+      const workSheetName = "Student";
+      const filePath = "./src/template/students.xlsx";
+
+      exportLecturersToExcel(
+        students,
+        workSheetColumnName,
+        workSheetName,
+        filePath
+      );
+    }
+
     return res.status(200).json({
       msg: "success",
-      data: lists,
+      data: students,
     });
+
+    //res setHeader
+    //res set Content type
+    //data = res.body
   } catch (error) {
     console.log(error);
   }

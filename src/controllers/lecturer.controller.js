@@ -1,6 +1,7 @@
 import { db } from "../config/config";
 import Lecturer from "../models/lecturer.model";
 import Course from "../models/course.model";
+import { exportStudentsToExcel } from "../services/convertJson";
 import {
   addLecturerSchema,
   addWithCourseSchema,
@@ -9,6 +10,7 @@ import {
 
 const listLecturer = async (req, res, next) => {
   try {
+    // const { download } = req.query;
     const lists = await Lecturer.findAll({
       include: [
         {
@@ -22,6 +24,12 @@ const listLecturer = async (req, res, next) => {
         exclude: ["password"],
       },
     });
+
+    //function parsing json to excel file
+
+    //res setHeader
+    //res set Content type
+    //data = res.body
 
     return res.status(200).json({
       msg: "success",
