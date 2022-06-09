@@ -31,6 +31,8 @@ app.use("/", ClassRoutes);
 app.use("/", CourseRoutes);
 app.use("/", LecturerRoutes);
 
+
+
 app.listen(process.env.APP_PORT, async () => {
   await db.sync();
   console.log(`=================================`);

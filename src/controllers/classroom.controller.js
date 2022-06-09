@@ -3,10 +3,13 @@ import Classroom from "../models/classroom.model";
 import Student from "../models/student.model";
 import ClassStudent from "../models/classstudent.model";
 import { addClassSchema, addWithStudentSchema } from "../validations/classroom";
+import { testConvertClasses } from "../services/convertJsonClassroom";
 
 const listClass = async (req, res, next) => {
   try {
-    const lists = await Classroom.findAll({
+    const { download } = req.query;
+
+    const classes = await Classroom.findAll({
       include: [
         // {
         //   model: Student,
@@ -33,10 +36,27 @@ const listClass = async (req, res, next) => {
       ],
     });
 
-    return res.status(200).json({
-      msg: "success",
-      data: lists,
-    });
+    if (download === "true") {
+      const result = await testConvertClasses(classes);
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + "classes.xlsx"
+      );
+
+      res.send(result);
+      res.end();
+      return res;
+    } else {
+      return res.status(200).json({
+        msg: "success",
+        data: classes,
+      });
+    }
   } catch (error) {
     console.log(error);
   }

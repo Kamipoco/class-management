@@ -3,10 +3,13 @@ import Course from "../models/course.model";
 import Lecturer from "../models/lecturer.model";
 import Student from "../models/student.model";
 import { addCourseSchema, updateCourseSchema } from "../validations/course";
+import { testConvertCourses } from "../services/converJsonCourses";
 
 const listCourses = async (req, res, next) => {
   try {
-    const lists = await Course.findAll({
+    const { download } = req.query;
+
+    const courses = await Course.findAll({
       include: [
         {
           model: Lecturer,
@@ -22,10 +25,28 @@ const listCourses = async (req, res, next) => {
       order: [["createdAt", "DESC"]],
     });
 
-    return res.status(200).json({
-      msg: "success",
-      data: lists,
-    });
+    //convert json
+    if (download === "true") {
+      const result = await testConvertCourses(courses);
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + "courses.xlsx"
+      );
+
+      res.send(result);
+      res.end();
+      return res;
+    } else {
+      return res.status(200).json({
+        msg: "success",
+        data: courses,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
