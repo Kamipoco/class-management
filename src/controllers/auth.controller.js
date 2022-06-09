@@ -29,7 +29,7 @@ const signUp = async (req, res, next) => {
     if (check) {
       return res.status(422).json({
         status: false,
-        errors: "User already exists with that email or username!",
+        error: "User already exists with that email or username!",
       });
     }
 
@@ -66,7 +66,7 @@ const signIn = async (req, res, next) => {
 
     if (!check) {
       return res.status(422).json({
-        errors: "Invalid Email or Password",
+        error: "Invalid Email or Password",
       });
     }
 
@@ -149,7 +149,7 @@ const newPassword = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        errors: "Unauthorized",
+        error: "Unauthorized",
       });
     }
 
@@ -164,7 +164,7 @@ const newPassword = async (req, res, next) => {
 
     if (!check) {
       return res.status(422).json({
-        errors: "Try again session expired",
+        error: "Try again session expired",
       });
     }
 
@@ -199,7 +199,7 @@ const Register = async (req, res, next) => {
     if (check) {
       return res.status(422).json({
         status: false,
-        errors: "User already exists with that email or username!",
+        error: "User already exists with that email or username!",
       });
     }
 

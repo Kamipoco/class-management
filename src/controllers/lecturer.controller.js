@@ -1,6 +1,7 @@
 import { db } from "../config/config";
 import Lecturer from "../models/lecturer.model";
 import Course from "../models/course.model";
+import { testConvertLecturers } from "../services/convertJsonLecturer";
 import {
   addLecturerSchema,
   addWithCourseSchema,
@@ -9,7 +10,8 @@ import {
 
 const listLecturer = async (req, res, next) => {
   try {
-    const lists = await Lecturer.findAll({
+    const { download } = req.query;
+    const lecturers = await Lecturer.findAll({
       include: [
         {
           model: Course,
@@ -23,10 +25,28 @@ const listLecturer = async (req, res, next) => {
       },
     });
 
-    return res.status(200).json({
-      msg: "success",
-      data: lists,
-    });
+    //json -> excel
+    if (download === "true") {
+      const result = await testConvertLecturers(lecturers);
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + "lecturers.xlsx"
+      );
+
+      res.send(result);
+      res.end();
+      return res;
+    } else {
+      return res.status(200).json({
+        msg: "success",
+        data: lecturers,
+      });
+    }
   } catch (error) {
     console.log(error);
   }

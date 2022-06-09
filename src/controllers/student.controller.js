@@ -8,10 +8,14 @@ import bcrypt from "bcryptjs";
 import { updateProfileSchema } from "../validations/student";
 import { changePasswordSchema } from "../validations/student";
 import { Op } from "sequelize";
+import { testConvertStudents } from "../services/convertJsonStudent";
+import path from "path";
 
 const getStudents = async (req, res, next) => {
   try {
-    const lists = await Student.findAll({
+    const { download } = req.query;
+
+    const students = await Student.findAll({
       include: [
         {
           model: Classroom,
@@ -30,10 +34,27 @@ const getStudents = async (req, res, next) => {
       },
     });
 
-    return res.status(200).json({
-      msg: "success",
-      data: lists,
-    });
+    if (download === "true") {
+      const result = await testConvertStudents(students);
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + "Report.xlsx"
+      );
+
+      res.send(result);
+      res.end();
+      return res;
+    } else {
+      return res.status(200).json({
+        msg: "success",
+        data: students,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -41,6 +62,8 @@ const getStudents = async (req, res, next) => {
 
 const getStudentById = async (req, res, next) => {
   try {
+    // const { download } = req.query;
+
     const student = await Student.findByPk(req.params.id, {
       include: [
         {
@@ -65,6 +88,32 @@ const getStudentById = async (req, res, next) => {
       });
     }
 
+    // if (download === "true") {
+    //   //json -> excel
+    //   const workSheetColumnName = [
+    //     "student_name",
+    //     "email",
+    //     "bio",
+    //     "role",
+    //     "createdAt",
+    //     "updatedAt",
+    //   ];
+
+    //   const workSheetName = "Student";
+    //   const filePath = "./src/template/studentDetail.xlsx";
+
+    //   exportLecturersToExcel(
+    //     student,
+    //     workSheetColumnName,
+    //     workSheetName,
+    //     filePath
+    //   );
+
+    //   return res.status(200).json({
+    //     msg: "success",
+    //   });
+    // }
+
     return res.status(200).json({
       msg: "Success",
       data: student,
@@ -84,7 +133,7 @@ const studentJoinClass = async (req, res, next) => {
     await result.save();
 
     return res.status(200).json({
-      msg: "Success",
+      msg: "success",
       data: result,
     });
   } catch (error) {
