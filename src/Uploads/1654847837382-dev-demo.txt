@@ -1,0 +1,88 @@
+## Danh sách banner
+
+*   Miêu tả : API danh sách Banner
+*   Method : GET
+*   Path : {{crm_url}}/v1/dealer/system-config/banners
+*   Authorization : Bearer Token
+*   Body (raw (json))
+    *   Body :
+        | STT | Key | Miêu tả | Type |
+        | --- | --- | --- | --- |
+        | 1 | total | Tổng số banner  | INT |
+        | 2 | data | Danh sách banner | ARRAY[JSON] |
+
+        * data item (JSON)
+            | STT | Key | Miêu tả | Type |
+            | --- | --- | --- | --- |
+            | 1 | id | ID  | INT |
+            | 2 | creator_id | Id Người tạo | STRING |
+            | 3 | type | Loại banner | ENUM |
+            | 4 | name | Tên banner | STRING |
+            | 5 | status | Trạng thái | ENUM |
+            | 6 | data_info | Thông tin banne | JSON |
+            | 7 | created_at | Ngày tạo | DATETIME |
+            | 8 | updated_at | Ngày cập nhật | DATETIME |
+            | 9 | creator_info | Thông tin người tạo | JSON |
+            
+            *   status (enum)
+                | Value | Miêu tả | Type |
+                | --- | --- | --- |
+                | 1 | Hoạt động | INT |
+                | \-1 | Tạm ngưng | INT |
+                
+            *   type (enum)
+                | Value | Miêu tả | Type |
+                | --- | --- | --- |
+                | 3 | Vemedim có gì mới" | INT |
+                | 4 | Giá và ưu đãi theo vật nuôi | INT |
+                | 5 | Chương trình khuyến mãi | INT |
+                
+            *   data_info (JSON)
+                | STT | Key | Miêu tả | Type |
+                | --- | --- | --- | --- |
+                | 1 | image | ID ảnh banner  | INT |
+    
+            *   creator_info (JSON)
+                | STT | Key | Miêu tả | Type |
+                | --- | --- | --- | --- |
+                | 1 | id | ID | INT |
+                | 2 | name | Tên  | INT |
+                | 3 | sap_code | SAP code  | INT |
+                | 4 | status | Trạng thái  | INT |
+                | 5 | sap_info | Thông tin SAP  | JSON |
+                
+                *   sap_info (JSON)
+                    | STT | Key | Miêu tả | Type |
+                    | --- | --- | --- | --- |
+                    | 1 | ID | ID ảnh banner  | INT |
+                    | 2 | EMPLOYEE_CODE | ID ảnh banner  | STRING |
+                    | 3 | EMPLOYEE_FULL_NAME | ID ảnh banner  | STRING |
+                
+*   Response
+    *   Success
+        *   status : 200
+        *   body example :
+            
+            ``` json
+            "total":1,
+            "data": [
+                {
+                    "id": 3,
+                    "creator_id": 739,
+                    "type": 3,
+                    "name": "Banner vemedim có gì mới",
+                    "status": -1,
+                    "data_info": {
+                        "image": "88a9c584-9cb0-46a6-9c56-9a3c2b185409"
+                    },
+                    "meta": {},
+                    "created_at": "2022-05-31T11:39:54.616Z",
+                    "updated_at": "2022-05-31T11:57:43.002Z"
+                }
+            ]
+            ```
+            
+    *   Fail
+        *   HTTP status 4xx error returns with error code and message by body
+
+* * *

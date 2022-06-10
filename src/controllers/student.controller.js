@@ -9,7 +9,10 @@ import { updateProfileSchema } from "../validations/student";
 import { changePasswordSchema } from "../validations/student";
 import { Op } from "sequelize";
 import { testConvertStudents } from "../services/convertJsonStudent";
-import path from "path";
+import cloudinary from "../utils/cloudinary";
+import upload from "../utils/multer";
+import { async } from "q";
+import multipleUploadService from "../services/multipleUploadService";
 
 const getStudents = async (req, res, next) => {
   try {
@@ -122,6 +125,43 @@ const getStudentById = async (req, res, next) => {
     console.log(error);
   }
 };
+
+//get url images from local or DB
+const getImages = async (req, res, next) => {
+  //get url tu model Student cua id dang dang nhap
+};
+
+//upload single file image (cloudinary)
+const uploadSingleFileImage = async (req, res, next) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+    return res.json({
+      msg: "success",
+      data: result.secure_url,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//upload multiple files (local)
+const uploadMultipleFile = async (req, res, next) => {
+  try {
+    await multipleUploadService(req, res);
+
+    if (req.files.length <= 0) {
+      return res.send(`You must select at least 1 file or more.`);
+    }
+
+    return res.send(`Your files has been uploaded.`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//upload multiple files (cloud)
+const uploadMultipleFilesCloud = async (req, res, next) => {};
 
 const studentJoinClass = async (req, res, next) => {
   try {
@@ -236,7 +276,6 @@ const deleteStudent = async (req, res, next) => {
   });
 };
 
-//#region
 const listStudent = async (req, res, next) => {
   const { page } = req.query;
 
@@ -335,11 +374,14 @@ const searchStudent = async (req, res, next) => {
     console.log(error);
   }
 };
-//#endregion
 
 module.exports = {
   getStudents,
   getStudentById,
+  getImages,
+  uploadSingleFileImage,
+  uploadMultipleFile,
+  uploadMultipleFilesCloud,
   studentJoinClass,
   studentJoinCourse,
   updateProfileStudent,
