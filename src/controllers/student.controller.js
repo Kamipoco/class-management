@@ -13,6 +13,7 @@ import cloudinary from "../utils/cloudinary";
 import upload from "../utils/multer";
 import { async } from "q";
 import multipleUploadService from "../services/multipleUploadService";
+import { cloudinaryImageUploadMethod } from "../services/cloudinaryImageUploadMethod";
 
 const getStudents = async (req, res, next) => {
   try {
@@ -154,14 +155,35 @@ const uploadMultipleFile = async (req, res, next) => {
       return res.send(`You must select at least 1 file or more.`);
     }
 
-    return res.send(`Your files has been uploaded.`);
+    return res.status(200).json({
+      msg: "success",
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
 //upload multiple files (cloud)
-const uploadMultipleFilesCloud = async (req, res, next) => {};
+const uploadMultipleFilesCloud = async (req, res, next) => {
+  const urls = [];
+  const files = req.files;
+  for (const file of files) {
+    const { path } = file;
+    const newPath = await cloudinaryImageUploadMethod(path);
+
+    urls.push(newPath);
+  }
+  console.log(urls);
+
+  //luu vao DB cai url
+  // const result = Student.create({
+  //   files: urls.map((url) => url.res),
+  // });
+
+  return res.status(200).json({
+    msg: "success",
+  });
+};
 
 const studentJoinClass = async (req, res, next) => {
   try {

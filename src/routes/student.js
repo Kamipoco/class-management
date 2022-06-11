@@ -28,13 +28,22 @@ router.get("/student/:id", checkLogin, getStudentById);
 //get url images from DB or local
 router.get("/student/get-images", checkLogin, getImages);
 
-//upload multiple files local
+//upload single file image cloud(done)
+router.post(
+  "/student/upload",
+  checkLogin,
+  upload.single("url"),
+  uploadSingleFileImage
+);
+
+//upload multiple files local(luu DB)
 router.post("/student/upload-multiple-local", checkLogin, uploadMultipleFile);
 
-//upload multiple files local
+//upload multiple files cloud
 router.post(
   "/student/upload-multiple-cloud",
   checkLogin,
+  upload.array("files", 6),
   uploadMultipleFilesCloud
 );
 
@@ -46,12 +55,5 @@ router.delete("/student/remove/:id", checkLogin, deleteStudent);
 
 //pagination & filter
 router.get("/lists", checkLogin, listStudent);
-//upload single file image
-router.post(
-  "/student/upload",
-  checkLogin,
-  upload.single("url"),
-  uploadSingleFileImage
-);
 
 module.exports = router;
