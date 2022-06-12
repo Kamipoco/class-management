@@ -42,7 +42,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "",
       },
       lecturer_id: {
-        //nen lưu id vào bảng nối giữa lecturer-course để trường hợp năm nay lecturer đảm nhận course và năm sau lại đảm nhận course khác với id khác
         type: DataTypes.INTEGER,
         references: {
           model: "Lecturer",

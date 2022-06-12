@@ -9,10 +9,10 @@ module.exports = multer({
 
     console.log(file.originalname);
 
-    if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
-      cb(new Error("File type is not supported"), false);
-      return;
-    }
+    // if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
+    //   cb(new Error("File type is not supported"), false);
+    //   return;
+    // }
 
     cb(null, true);
   },

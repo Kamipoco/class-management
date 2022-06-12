@@ -163,7 +163,7 @@ const uploadMultipleFile = async (req, res, next) => {
   }
 };
 
-//upload multiple files (cloud)
+//upload multiple files (cloudinary)
 const uploadMultipleFilesCloud = async (req, res, next) => {
   const urls = [];
   const files = req.files;

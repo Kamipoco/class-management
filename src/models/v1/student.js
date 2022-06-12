@@ -49,6 +49,13 @@ module.exports = (sequelize, DataTypes) => {
         type: Sequelize.STRING,
         defaultValue: "student",
       },
+      files: [
+        {
+          url: {
+            type: Sequelize.STRING,
+          },
+        },
+      ],
       resetToken: {
         type: Sequelize.STRING,
         defaultValue: "",
@@ -56,15 +63,6 @@ module.exports = (sequelize, DataTypes) => {
       expireToken: {
         type: Sequelize.DATE,
         allowNull: true,
-      },
-      classroom_id: {
-        //luu trong mot bang noi ClassStudent
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Classroom",
-          key: "id",
-          as: "classroom_id",
-        },
       },
     },
     {
