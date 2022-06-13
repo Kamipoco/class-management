@@ -2,9 +2,9 @@ import express from "express";
 import {
   getStudents,
   getStudentById,
-  getImages,
-  uploadSingleFileImage,
-  uploadMultipleFile,
+  getFilesById,
+  getMyFiles,
+  uploadMultipleFileLocal,
   uploadMultipleFilesCloud,
   studentJoinClass,
   studentJoinCourse,
@@ -15,8 +15,6 @@ import {
   searchStudent,
 } from "../controllers/student.controller";
 import checkLogin from "../middlewares/checkLogin";
-import checkRoles from "../middlewares/checkRoles";
-import { uploadMul } from "../services/uploadFile";
 import upload from "../utils/multer";
 
 const router = express.Router();
@@ -25,22 +23,20 @@ router.get("/students", checkLogin, getStudents);
 router.get("/students/search", checkLogin, searchStudent);
 router.get("/student/:id", checkLogin, getStudentById);
 
-//get url images from DB or local
-router.get("/student/get-images", checkLogin, getImages);
+//get url images from DB or local by ID
+router.get("/student/files/:id", checkLogin, getFilesById);
 
-//upload single file image cloud(done)
-router.post(
-  "/student/upload",
+router.get("/student/my-files/:id", checkLogin, getMyFiles);
+
+//upload multiple files local(chua luu DB)
+router.put(
+  "/student/upload-multiple-local",
   checkLogin,
-  upload.single("url"),
-  uploadSingleFileImage
+  uploadMultipleFileLocal
 );
 
-//upload multiple files local(luu DB)
-router.post("/student/upload-multiple-local", checkLogin, uploadMultipleFile);
-
 //upload multiple files cloud
-router.post(
+router.put(
   "/student/upload-multiple-cloud",
   checkLogin,
   upload.array("files", 6),

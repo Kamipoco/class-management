@@ -11,7 +11,6 @@ import { Op } from "sequelize";
 import { testConvertStudents } from "../services/convertJsonStudent";
 import cloudinary from "../utils/cloudinary";
 import upload from "../utils/multer";
-import { async } from "q";
 import multipleUploadService from "../services/multipleUploadService";
 import { cloudinaryImageUploadMethod } from "../services/cloudinaryImageUploadMethod";
 
@@ -119,7 +118,7 @@ const getStudentById = async (req, res, next) => {
     // }
 
     return res.status(200).json({
-      msg: "Success",
+      msg: "success",
       data: student,
     });
   } catch (error) {
@@ -128,18 +127,34 @@ const getStudentById = async (req, res, next) => {
 };
 
 //get url images from local or DB
-const getImages = async (req, res, next) => {
-  //get url tu model Student cua id dang dang nhap
+const getFilesById = async (req, res, next) => {
+  try {
+    const student = await Student.findByPk(req.params.id, {
+      attributes: {
+        exclude: ["password", "resetToken", "expireToken"],
+      },
+    });
+
+    return res.status(200).json({
+      msg: "success",
+      data: student.files,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-//upload single file image (cloudinary)
-const uploadSingleFileImage = async (req, res, next) => {
+const getMyFiles = async (req, res, next) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const student = await Student.findByPk(req.user.id, {
+      attributes: {
+        exclude: ["password", "resetToken", "expireToken"],
+      },
+    });
 
-    return res.json({
+    return res.status(200).json({
       msg: "success",
-      data: result.secure_url,
+      data: student.files,
     });
   } catch (error) {
     console.log(error);
@@ -147,16 +162,33 @@ const uploadSingleFileImage = async (req, res, next) => {
 };
 
 //upload multiple files (local)
-const uploadMultipleFile = async (req, res, next) => {
+const uploadMultipleFileLocal = async (req, res, next) => {
   try {
+    const urls = [];
+
     await multipleUploadService(req, res);
 
     if (req.files.length <= 0) {
       return res.send(`You must select at least 1 file or more.`);
     }
 
+    for (let i = 0; i < req.files.length; i++) {
+      urls.push(req.files[i].path);
+    }
+
+    const student = await Student.findByPk(req.user.id, {
+      attributes: {
+        exclude: ["password", "resetToken", "expireToken"],
+      },
+    });
+
+    const result = await student.update({
+      files: urls.map((value) => value),
+    });
+
     return res.status(200).json({
       msg: "success",
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -173,15 +205,20 @@ const uploadMultipleFilesCloud = async (req, res, next) => {
 
     urls.push(newPath);
   }
-  console.log(urls);
 
-  //luu vao DB cai url
-  // const result = Student.create({
-  //   files: urls.map((url) => url.res),
-  // });
+  const student = await Student.findByPk(req.user.id, {
+    attributes: {
+      exclude: ["password", "resetToken", "expireToken"],
+    },
+  });
+
+  const result = await student.update({
+    files: urls.map((value) => value.url),
+  });
 
   return res.status(200).json({
     msg: "success",
+    data: result,
   });
 };
 
@@ -400,9 +437,9 @@ const searchStudent = async (req, res, next) => {
 module.exports = {
   getStudents,
   getStudentById,
-  getImages,
-  uploadSingleFileImage,
-  uploadMultipleFile,
+  getFilesById,
+  getMyFiles,
+  uploadMultipleFileLocal,
   uploadMultipleFilesCloud,
   studentJoinClass,
   studentJoinCourse,

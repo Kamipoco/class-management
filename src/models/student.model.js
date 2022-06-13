@@ -33,9 +33,7 @@ const Student = db.define("Student", {
   },
   files: [
     {
-      url: {
-        type: Sequelize.STRING,
-      },
+      type: Sequelize.STRING,
     },
   ],
   // url: [
