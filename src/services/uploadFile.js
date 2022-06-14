@@ -4,7 +4,6 @@ import { upload } from "../utils/upload";
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    console.log("file" + file);
     callback(null, "../Uploads/");
   },
   filename: function (req, file, callback) {

@@ -6,6 +6,7 @@ import {
   getMyFiles,
   uploadMultipleFileLocal,
   uploadMultipleFilesCloud,
+  uploadMultipleFileCloudS3,
   studentJoinClass,
   studentJoinCourse,
   updateProfileStudent,
@@ -28,19 +29,26 @@ router.get("/student/files/:id", checkLogin, getFilesById);
 
 router.get("/student/my-files/:id", checkLogin, getMyFiles);
 
-//upload multiple files local(chua luu DB)
+//upload multiple files local
 router.put(
   "/student/upload-multiple-local",
   checkLogin,
   uploadMultipleFileLocal
 );
 
-//upload multiple files cloud
+//upload multiple files cloud (Cloudinary)
 router.put(
   "/student/upload-multiple-cloud",
   checkLogin,
   upload.array("files", 6),
   uploadMultipleFilesCloud
+);
+
+//upload multiple files cloud (S3)
+router.put(
+  "/student/upload-multiple-cloud-s3",
+  checkLogin,
+  uploadMultipleFileCloudS3
 );
 
 router.post("/student/join-class", checkLogin, studentJoinClass);
