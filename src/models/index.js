@@ -38,7 +38,7 @@ Course.belongsTo(Lecturer, {
 //#region Student
 Student.belongsToMany(Classroom, {
   through: ClassStudent,
-  foreignKey: "classroom_id",
+  foreignKey: "student_id",
   as: "Classroom",
 });
 
