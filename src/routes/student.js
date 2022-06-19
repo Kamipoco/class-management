@@ -19,37 +19,37 @@ import upload from "../utils/multer";
 
 const router = express.Router();
 
-router.get("/students", checkLogin, getStudents);
-router.get("/students/search", checkLogin, searchStudent);
-router.get("/student/:id", checkLogin, getStudentById);
+router.get("/v1/students", checkLogin, getStudents);
+router.get("/v1/students/filter/search", checkLogin, searchStudent);
+router.get("/v1/students/:id", checkLogin, getStudentById);
 
 //get url images from DB or local by ID
-router.get("/student/files/:id", checkLogin, getFilesById);
+router.get("/v1/students/files/:id", checkLogin, getFilesById);
 
-router.get("/student/my-files/:id", checkLogin, getMyFiles);
+router.get("/v1/students/my-files", checkLogin, getMyFiles);
 
 //upload multiple files local(chua luu DB)
 router.put(
-  "/student/upload-multiple-local",
+  "/v1/students/uploads/multiple-files-local",
   checkLogin,
   uploadMultipleFileLocal
 );
 
 //upload multiple files cloud
 router.put(
-  "/student/upload-multiple-cloud",
+  "/v1/students/uploads/multiple-files-cloud",
   checkLogin,
   upload.array("files", 6),
   uploadMultipleFilesCloud
 );
 
-router.post("/student/join-class", checkLogin, studentJoinClass);
-router.post("/student/join-course", checkLogin, studentJoinCourse);
-router.put("/student/update/:id", checkLogin, updateProfileStudent);
-router.put("/student/change-password/:id", checkLogin, changePassword);
-router.delete("/student/remove/:id", checkLogin, deleteStudent);
+router.post("/v1/students/join-class", checkLogin, studentJoinClass);
+router.post("/v1/students/join-course", checkLogin, studentJoinCourse);
+router.put("/v1/students/update-profile", checkLogin, updateProfileStudent);
+router.put("/v1/students/change-password", checkLogin, changePassword);
+router.delete("/v1/students/remove/:id", checkLogin, deleteStudent);
 
 //pagination & filter
-router.get("/lists", checkLogin, listStudent);
+router.get("/v1/student/lists", checkLogin, listStudent);
 
 module.exports = router;

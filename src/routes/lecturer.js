@@ -11,18 +11,13 @@ import {
 
 const router = express.Router();
 
-router.get("/admin/lecturers", checkLogin, checkRoles, listLecturer);
-router.get("/admin/lecturer/:id", checkLogin, checkRoles, detailLecturer);
+router.get("/v1/lecturers", checkLogin, checkRoles, listLecturer);
+router.get("/v1/lecturers/:id", checkLogin, checkRoles, detailLecturer);
 //create khong can ==> Sign In, Sign Up rieng cho Lecturer
 // router.post("/admin/lecturer/create", checkLogin, checkRoles, addLecturer);
-router.put(
-  "/admin/lecturer/update/:id",
-  checkLogin,
-  checkRoles,
-  updateLecturer
-);
+router.put("/v1/lecturers/update/:id", checkLogin, checkRoles, updateLecturer);
 router.delete(
-  "/admin/lecturer/remove/:id",
+  "/v1/lecturers/remove/:id",
   checkLogin,
   checkRoles,
   deleteLecturer

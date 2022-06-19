@@ -12,16 +12,16 @@ import {
 
 const router = express.Router();
 
-router.get("/admin/classes", checkLogin, checkRoles, listClass);
-router.get("/admin/class/:id", checkLogin, checkRoles, classDetail);
-router.post("/admin/class/create", checkLogin, checkRoles, createClass);
-router.post(
-  "/admin/class/add-student",
+router.get("/v1/classes", checkLogin, checkRoles, listClass);
+router.get("/v1/classes/:id", checkLogin, checkRoles, classDetail);
+router.post("/v1/classes/create", checkLogin, checkRoles, createClass);
+router.put(
+  "/v1/classes/update-student",
   checkLogin,
   checkRoles,
   classAddStudent
 );
-router.put("/admin/class/update/:id", updateClass);
-router.delete("/admin/class/remove/:id", deleteClass);
+router.put("/v1/classes/update/:id", updateClass);
+router.delete("/v1/classes/remove/:id", deleteClass);
 
 module.exports = router;

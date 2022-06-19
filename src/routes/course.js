@@ -10,11 +10,11 @@ import {
 
 const router = express.Router();
 
-router.get("/admin/courses", listCourses);
-router.get("/admin/course/:id", courseDetail);
-router.post("/admin/course/create", createCourse);
-router.put("/admin/course/update-lecturer/:id", addLecturer);
-router.put("/admin/course/update-course/:id", updateCourse);
-router.delete("/admin/course/remove/:id", deleteCourse);
+router.get("/v1/courses", listCourses);
+router.get("/v1/courses/:id", courseDetail);
+router.post("/v1/courses/create", createCourse);
+router.put("/v1/courses/update-lecturer/:id", addLecturer);
+router.put("/v1/courses/update/:id", updateCourse);
+router.delete("/v1/courses/remove/:id", deleteCourse);
 
 module.exports = router;

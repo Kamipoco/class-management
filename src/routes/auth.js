@@ -9,15 +9,19 @@ import {
 } from "../controllers/auth.controller";
 const router = express.Router();
 
+// const router = new Router({
+//   prefix: "/v1/auth",
+// });
+
 //Student
-router.post("/signup", signUp);
-router.post("/signin", signIn);
-router.post("/forgot-password", forgotPassword);
-router.post("/new-password", newPassword);
+router.post("/v1/auth/signup", signUp);
+router.post("/v1/auth/signin", signIn);
+router.post("/v1/auth/forgot-password", forgotPassword);
+router.post("/v1/auth/new-password", newPassword);
 
 //Lecturer (Admin)
-router.post("/admin/signup", Register);
-router.post("/admin/signin", Login);
+router.post("/v1/auth/admin/register", Register);
+router.post("/v1/auth/admin/login", Login);
 // router.post("/admin/forgot-password", forgotPassword);
 // router.post("/admin/new-password", newPassword);
 
