@@ -91,32 +91,6 @@ const getStudentById = async (req, res, next) => {
       });
     }
 
-    // if (download === "true") {
-    //   //json -> excel
-    //   const workSheetColumnName = [
-    //     "student_name",
-    //     "email",
-    //     "bio",
-    //     "role",
-    //     "createdAt",
-    //     "updatedAt",
-    //   ];
-
-    //   const workSheetName = "Student";
-    //   const filePath = "./src/template/studentDetail.xlsx";
-
-    //   exportLecturersToExcel(
-    //     student,
-    //     workSheetColumnName,
-    //     workSheetName,
-    //     filePath
-    //   );
-
-    //   return res.status(200).json({
-    //     msg: "success",
-    //   });
-    // }
-
     return res.status(200).json({
       msg: "success",
       data: student,
@@ -195,7 +169,7 @@ const uploadMultipleFileLocal = async (req, res, next) => {
   }
 };
 
-//upload multiple files (cloudinary)
+//upload multiple files cloud (cloudinary)
 const uploadMultipleFilesCloud = async (req, res, next) => {
   const urls = [];
   const files = req.files;
@@ -220,6 +194,15 @@ const uploadMultipleFilesCloud = async (req, res, next) => {
     msg: "success",
     data: result,
   });
+};
+
+//upload multiple files cloud (S3)
+const uploadMultipleFileCloudS3 = async (req, res, next) => {
+  try {
+    const files = req.files;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const studentJoinClass = async (req, res, next) => {
@@ -441,6 +424,7 @@ module.exports = {
   getMyFiles,
   uploadMultipleFileLocal,
   uploadMultipleFilesCloud,
+  uploadMultipleFileCloudS3,
   studentJoinClass,
   studentJoinCourse,
   updateProfileStudent,

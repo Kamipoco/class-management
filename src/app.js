@@ -25,13 +25,12 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", async (req, res) => {
   res.send("Test Server");
 });
+
 app.use("/", AuthRoutes);
 app.use("/", StudentRoutes);
 app.use("/", ClassRoutes);
 app.use("/", CourseRoutes);
 app.use("/", LecturerRoutes);
-
-
 
 app.listen(process.env.APP_PORT, async () => {
   await db.sync();
