@@ -20,25 +20,25 @@ import upload from "../utils/multer";
 
 const router = express.Router();
 
-router.get("/students", checkLogin, getStudents);
-router.get("/students/search", checkLogin, searchStudent);
-router.get("/student/:id", checkLogin, getStudentById);
+router.get("/api/v1/students", checkLogin, getStudents);
+router.get("/api/v1/students/filter/search", checkLogin, searchStudent);
+router.get("/api/v1/students/:id", checkLogin, getStudentById);
 
 //get url images from DB or local by ID
-router.get("/student/files/:id", checkLogin, getFilesById);
+router.get("/api/v1/students/files/:id", checkLogin, getFilesById);
 
-router.get("/student/my-files/:id", checkLogin, getMyFiles);
+// router.get("/student/my-files/:id", checkLogin, getMyFiles);
 
 //upload multiple files local
 router.put(
-  "/student/upload-multiple-local",
+  "/api/v1/students/uploads/local",
   checkLogin,
   uploadMultipleFileLocal
 );
 
 //upload multiple files cloud (Cloudinary)
 router.put(
-  "/student/upload-multiple-cloud",
+  "/api/v1/students/uploads/cloud",
   checkLogin,
   upload.array("files", 6),
   uploadMultipleFilesCloud
@@ -46,16 +46,16 @@ router.put(
 
 //upload multiple files cloud (S3)
 router.put(
-  "/student/upload-multiple-cloud-s3",
+  "/api/v1/students/uploads/cloudS3",
   checkLogin,
   uploadMultipleFileCloudS3
 );
 
-router.post("/student/join-class", checkLogin, studentJoinClass);
-router.post("/student/join-course", checkLogin, studentJoinCourse);
-router.put("/student/update/:id", checkLogin, updateProfileStudent);
-router.put("/student/change-password/:id", checkLogin, changePassword);
-router.delete("/student/remove/:id", checkLogin, deleteStudent);
+router.post("/api/v1/students/join-class", checkLogin, studentJoinClass);
+router.post("/api/v1/students/join-course", checkLogin, studentJoinCourse);
+router.put("/api/v1/students", checkLogin, updateProfileStudent);
+router.put("/api/v1/students/change-password", checkLogin, changePassword);
+router.delete("/api/v1/students/:id", checkLogin, deleteStudent);
 
 //pagination & filter
 router.get("/lists", checkLogin, listStudent);
