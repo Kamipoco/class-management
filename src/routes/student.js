@@ -58,6 +58,6 @@ router.put("/api/v1/students/change-password", checkLogin, changePassword);
 router.delete("/api/v1/students/:id", checkLogin, deleteStudent);
 
 //pagination & filter
-router.get("/lists", checkLogin, listStudent);
+router.get("/v1/student/lists", checkLogin, listStudent);
 
 module.exports = router;

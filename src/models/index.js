@@ -9,7 +9,7 @@ import ClassStudent from "../models/classstudent.model";
 
 //#region Classroom
 Classroom.belongsToMany(Student, {
-  through: ClassStudent,
+  through: "ClassStudent",
   foreignKey: "classroom_id",
   as: "Student",
 });
@@ -37,7 +37,11 @@ Course.belongsTo(Lecturer, {
 
 //#region Student
 Student.belongsToMany(Classroom, {
+<<<<<<< HEAD
+  through: "ClassStudent",
+=======
   through: ClassStudent,
+>>>>>>> 2e0a4e24a98e66180dc3f8a0e3628f8a6fbdebc4
   foreignKey: "student_id",
   as: "Classroom",
 });

@@ -9,6 +9,10 @@ import {
 } from "../controllers/auth.controller";
 const router = express.Router();
 
+// const router = new Router({
+//   prefix: "/v1/auth",
+// });
+
 //Student
 router.post("/api/v1/auth/create", signUp);
 router.post("/api/v1/auth/login", signIn);
