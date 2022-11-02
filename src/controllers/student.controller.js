@@ -1,26 +1,48 @@
-import { db } from "../config/config";
+import {
+  db
+} from "../config/config";
 import Student from "../models/student.model";
 import Classroom from "../models/classroom.model";
 import Course from "../models/course.model";
 import ClassStudent from "../models/classstudent.model";
 import StudentCourse from "../models/studentcourse.model";
 import bcrypt from "bcryptjs";
-import { updateProfileSchema } from "../validations/student";
-import { changePasswordSchema } from "../validations/student";
-import { Op } from "sequelize";
-import { testConvertStudents } from "../services/convertJsonStudent";
+import {
+  updateProfileSchema
+} from "../validations/student";
+import {
+  changePasswordSchema
+} from "../validations/student";
+import {
+  Op
+} from "sequelize";
+import {
+  testConvertStudents
+} from "../services/convertJsonStudent";
 import cloudinary from "../utils/cloudinary";
 import upload from "../utils/multer";
 import multipleUploadService from "../services/multipleUploadService";
-import { cloudinaryImageUploadMethod } from "../services/cloudinaryImageUploadMethod";
+import {
+  cloudinaryImageUploadMethod
+} from "../services/cloudinaryImageUploadMethod";
+import {
+  uploadFile,
+  getFileStream,
+  getFileLink
+} from "../services/uploadS3.js"
+import fs from "fs"
+import util from "util"
+
+const unlinkFile = util.promisify(fs.unlink);
 
 const getStudents = async (req, res, next) => {
   try {
-    const { download } = req.query;
+    const {
+      download
+    } = req.query;
 
     const students = await Student.findAll({
-      include: [
-        {
+      include: [{
           model: Classroom,
           as: "Classroom",
           attributes: ["class_name"],
@@ -31,7 +53,9 @@ const getStudents = async (req, res, next) => {
           attributes: ["subject_name", "title", "description"],
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [
+        ["createdAt", "DESC"]
+      ],
       attributes: {
         exclude: ["password"],
       },
@@ -68,8 +92,7 @@ const getStudentById = async (req, res, next) => {
     // const { download } = req.query;
 
     const student = await Student.findByPk(req.params.id, {
-      include: [
-        {
+      include: [{
           model: Classroom,
           as: "Classroom",
           attributes: ["class_name"],
@@ -174,7 +197,9 @@ const uploadMultipleFilesCloud = async (req, res, next) => {
   const urls = [];
   const files = req.files;
   for (const file of files) {
-    const { path } = file;
+    const {
+      path
+    } = file;
     const newPath = await cloudinaryImageUploadMethod(path);
 
     urls.push(newPath);
@@ -199,11 +224,45 @@ const uploadMultipleFilesCloud = async (req, res, next) => {
 //upload multiple files cloud (S3)
 const uploadMultipleFileCloudS3 = async (req, res, next) => {
   try {
-    const files = req.files;
+    console.log("===", req.files);
+
+    // // uploading to AWS S3
+    for (let i of req.files) {
+      const result = await uploadFile(i);
+      console.log("S3 response", result);
+
+      // You may apply filter, resize image before sending to client
+
+      // Deleting from local if uploaded in S3 bucket
+      await unlinkFile(i.path);
+    }
+
+
+
+    res.send({
+      status: "success",
+      message: "Files uploaded successfully",
+      data: req.files,
+    });
   } catch (error) {
     console.log(error);
   }
 };
+
+//Get file stream S3
+const getFileStreamS3 = (req, res, next) => {
+  const key = req.params.key;
+  console.log(req.params.key);
+  const readStream = getFileStream(key);
+  readStream.pipe(res);
+}
+
+//Serving Files via Amazon CloudFront
+const downloadFileCloudFront = async (req, res, next) => {
+  let response = await getFileLink(req.query.filename);
+  res.send(response);
+  res.end();
+}
 
 const studentJoinClass = async (req, res, next) => {
   try {
@@ -242,7 +301,10 @@ const studentJoinCourse = async (req, res, next) => {
 };
 
 const updateProfileStudent = async (req, res, next) => {
-  const { student_name, bio } = req.body;
+  const {
+    student_name,
+    bio
+  } = req.body;
   const validation = await updateProfileSchema.validateAsync(req.body);
 
   const student = await Student.findByPk(req.params.id, {
@@ -279,7 +341,10 @@ const updateProfileStudent = async (req, res, next) => {
 };
 
 const changePassword = async (req, res, next) => {
-  const { currentPassword, newPassword } = req.body;
+  const {
+    currentPassword,
+    newPassword
+  } = req.body;
 
   const infoStudent = await Student.findByPk(req.params.id); //req.user.id
   const isPassword = await bcrypt.compareSync(
@@ -319,7 +384,9 @@ const deleteStudent = async (req, res, next) => {
 };
 
 const listStudent = async (req, res, next) => {
-  const { page } = req.query;
+  const {
+    page
+  } = req.query;
 
   const number = Number(page);
   const per_page = 4;
@@ -329,8 +396,7 @@ const listStudent = async (req, res, next) => {
 
     if (number === 1 || number === 0) {
       students = await Student.findAll({
-        include: [
-          {
+        include: [{
             model: Classroom,
             as: "Classroom",
             attributes: ["class_name"],
@@ -348,8 +414,7 @@ const listStudent = async (req, res, next) => {
     } else {
       const skips = per_page * (number - 1);
       students = await Student.findAll({
-        include: [
-          {
+        include: [{
             model: Classroom,
             as: "Classroom",
             attributes: ["class_name"],
@@ -380,15 +445,18 @@ const searchStudent = async (req, res, next) => {
     const fieldSearch = req.query.name;
 
     if (!fieldSearch || fieldSearch.length === 0) {
-      return res.status(422).json({ error: "Please fill in all fields" });
+      return res.status(422).json({
+        error: "Please fill in all fields"
+      });
     }
 
     const student = await Student.findAndCountAll({
       where: {
-        student_name: { [Op.iLike]: fieldSearch },
+        student_name: {
+          [Op.iLike]: fieldSearch
+        },
       },
-      include: [
-        {
+      include: [{
           model: Classroom,
           as: "Classroom",
           attributes: ["class_name"],
@@ -405,7 +473,10 @@ const searchStudent = async (req, res, next) => {
     });
 
     if (student.count === 0) {
-      return res.status(404).json({ status: 404, message: "Not Found!" });
+      return res.status(404).json({
+        status: 404,
+        message: "Not Found!"
+      });
     }
 
     return res.status(200).json({
@@ -432,4 +503,6 @@ module.exports = {
   deleteStudent,
   listStudent,
   searchStudent,
+  getFileStreamS3,
+  downloadFileCloudFront
 };

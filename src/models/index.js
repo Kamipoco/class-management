@@ -1,5 +1,7 @@
 import Sequelize from "sequelize";
-import { db } from "../config/config";
+import {
+  db
+} from "../config/config";
 import Student from "../models/student.model";
 import Lecturer from "../models/lecturer.model";
 import StudentCourse from "../models/studentcourse.model";
