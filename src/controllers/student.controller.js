@@ -224,7 +224,7 @@ const uploadMultipleFilesCloud = async (req, res, next) => {
 //upload multiple files cloud (S3)
 const uploadMultipleFileCloudS3 = async (req, res, next) => {
   try {
-    console.log("===", req.files);
+    console.log(req.files);
 
     // // uploading to AWS S3
     for (let i of req.files) {

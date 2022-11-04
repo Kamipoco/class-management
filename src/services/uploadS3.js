@@ -5,6 +5,9 @@ import {
 } from "dotenv";
 import multer from "multer"
 import awsCloudFront from 'aws-cloudfront-sign';
+import {
+  v4 as uuidv4
+} from 'uuid';
 
 config();
 
@@ -13,7 +16,7 @@ const fileStorageEngine = multer.diskStorage({
     cb(null, "../Uploads");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-dev-" + file.originalname);
+    cb(null, uuidv4());
   },
 });
 
@@ -53,7 +56,7 @@ function getFileStream(fileKey) {
   return s3.getObject(downloadParams).createReadStream();
 }
 
-//DOWNLOAD FILE WITH CLOUDFRONT S3
+//DOWNLOAD FILE WITH CLOUDFRONT(CDN) S3
 function getFileLink(filename) {
   return new Promise(function (resolve, reject) {
     var options = {
