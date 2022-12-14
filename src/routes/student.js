@@ -52,12 +52,14 @@ router.put(
 //upload multiple files cloud (S3)
 router.put(
   "/api/v1/students/uploads/cloudS3",
-  checkLogin,
+  // checkLogin,
   multipleUploadS3,
   uploadMultipleFileCloudS3
 );
 //Get file stream S3
-router.get("/api/v1/students/get-file/cloudS3/:key", checkLogin, getFileStreamS3)
+router.get("/api/v1/students/get-file/cloudS3/:key",
+  checkLogin,
+  getFileStreamS3)
 //Get file with cloudfront S3
 router.get("/api/v1/students/get-file/cloudfront", checkLogin, downloadFileCloudFront)
 
