@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { signJWT } from "../services/signJWT";
 import Student from "../models/student.model";
+import Lecturer from "../models/lecturer.model";
 import nodemailer from "nodemailer";
 import { sendMail } from "../services/sendmail";
 import crypto from "crypto";
@@ -12,6 +13,7 @@ import {
   newPasswordSchema,
 } from "../validations/auth";
 
+//#region Auth Student
 const signUp = async (req, res, next) => {
   try {
     const { student_name, email, password } = req.body;
@@ -27,7 +29,7 @@ const signUp = async (req, res, next) => {
     if (check) {
       return res.status(422).json({
         status: false,
-        errors: "User already exists with that email or username!",
+        error: "User already exists with that email or username!",
       });
     }
 
@@ -44,7 +46,7 @@ const signUp = async (req, res, next) => {
 
       await student.save();
 
-      return res.status(200).json({ msg: "Success", data: { student } });
+      return res.status(200).json({ msg: "success", data: student });
     });
   } catch (error) {
     console.log(error);
@@ -64,7 +66,7 @@ const signIn = async (req, res, next) => {
 
     if (!check) {
       return res.status(422).json({
-        message: "Invalid Email or Password",
+        error: "Invalid Email or Password",
       });
     }
 
@@ -77,7 +79,7 @@ const signIn = async (req, res, next) => {
     const token = signJWT(check);
 
     return res.status(200).json({
-      message: "Login Success",
+      message: "success",
       token,
     });
   } catch (error) {
@@ -98,7 +100,7 @@ const forgotPassword = async (req, res, next) => {
 
     if (!student) {
       return res.status(422).json({
-        error: "User dont exists with that email",
+        errors: "User dont exists with that email",
       });
     }
 
@@ -174,16 +176,93 @@ const newPassword = async (req, res, next) => {
     await check.save();
 
     return res.status(200).json({
-      msg: "Password updated success ok",
+      msg: "success",
     });
   } catch (error) {
     console.log(error);
   }
 };
 
+//#endregion
+
+//#region Auth Admin
+const Register = async (req, res, next) => {
+  try {
+    const { lecturer_name, email, password } = req.body;
+
+    const check = await Lecturer.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (check) {
+      return res.status(422).json({
+        status: false,
+        error: "User already exists with that email or username!",
+      });
+    }
+
+    bcrypt.hash(password, 12, async (error, passwordhashed) => {
+      if (error) {
+        console.log(error);
+      }
+
+      const lecturer = await Lecturer.create({
+        lecturer_name,
+        email,
+        password: passwordhashed,
+      });
+
+      await lecturer.save();
+
+      return res.status(200).json({ msg: "success", data: lecturer });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const check = await Lecturer.findOne({
+      where: {
+        email: email.toLowerCase().toString(),
+      },
+    });
+
+    if (!check) {
+      return res.status(422).json({
+        errors: "Invalid Email or Password",
+      });
+    }
+
+    const comparePassword = await bcrypt.compare(password, check.password);
+
+    if (!comparePassword) {
+      return res.status(400).json({ message: "Invalid Pw" });
+    }
+
+    const token = signJWT(check);
+
+    return res.status(200).json({
+      msg: "success",
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//#endregion
+
 module.exports = {
   signUp,
   signIn,
   forgotPassword,
   newPassword,
+  Register,
+  Login,
 };

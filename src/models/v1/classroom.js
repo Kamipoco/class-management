@@ -36,8 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      //#region
-      //thuoc tinh StudentArray thi dung relationship de lay ra so luong thanh vien chu khong khoi tao thuoc tinh
     },
     {
       sequelize,

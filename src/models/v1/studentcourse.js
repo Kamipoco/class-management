@@ -13,21 +13,17 @@ module.exports = (sequelize, DataTypes) => {
   }
   StudentCourse.init(
     {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
       student_id: {
         type: DataTypes.INTEGER,
-        references: {
-          model: "student",
-          key: "id",
-          as: "student_id",
-        },
       },
       course_id: {
         type: DataTypes.INTEGER,
-        references: {
-          model: "course",
-          key: "id",
-          as: "course_id",
-        },
       },
     },
     {

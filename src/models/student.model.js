@@ -31,6 +31,16 @@ const Student = db.define("Student", {
     type: Sequelize.STRING,
     defaultValue: "student",
   },
+  files: [
+    {
+      type: Sequelize.STRING,
+    },
+  ],
+  // url: [
+  //   {
+  //     type: Sequelize.STRING,
+  //   },
+  // ],
   resetToken: {
     type: Sequelize.STRING,
     defaultValue: "",
